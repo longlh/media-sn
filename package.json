@@ -1,0 +1,16 @@
+{
+  "name": "image-feed",
+  "version": "0.0.1",
+  "description": "Single image per view, with prev/next/random navigator",
+  "main": "index.js",
+  "repository": "git@github.com:longlh/image-feed.git",
+  "author": "LongLH <d@dapps.me>",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "3.5.0",
+    "ect": "0.5.9",
+    "express": "4.15.3",
+    "mongoose": "4.11.1",
+    "redis": "2.7.1"
+  }
+}
