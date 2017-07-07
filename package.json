@@ -12,6 +12,8 @@
     "bootstrap": "3.3.7",
     "ect": "0.5.9",
     "express": "4.15.3",
+    "formidable": "1.1.1",
+    "jquery": "3.2.1",
     "mongoose": "4.11.1",
     "plupload": "2.3.2",
     "redis": "2.7.1"

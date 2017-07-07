@@ -17,16 +17,16 @@ const app = module.exports = express();
 
 // config static dir
 app.use(express.static(themeDir));
-app.use('/lib', express.static(libDir));
+app.use('/libs', express.static(libDir));
 
 // config view engine
 app.set('view engine', 'ect');
+app.set('views', themeDir);
 app.engine('ect', ect({
 	watch: true,
 	root: themeDir,
 	ext: '.ect'
 }).render);
-app.set('views', themeDir);
 
 // route
 app.use('/', (req, res, next) => {
@@ -35,8 +35,6 @@ app.use('/', (req, res, next) => {
 
 	// config
 	res.locals.config = app.parent.get('config');
-	// console.log(app.parent);
-	console.log(res.locals.config);
 
 	next();
 });

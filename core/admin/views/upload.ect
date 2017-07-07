@@ -1,0 +1,38 @@
+<!doctype>
+<html>
+<head>
+	<title>Upload</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Image Feed</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Login</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container">
+		<form>
+			<div class="form-group">
+				<label>Upload</label>
+				<br>
+				<button id="browse-button" class="btn btn-default">Choose a file</button>
+				<p class="help-block">
+					<ul id="queue">
+					</ul>
+				</p>
+			</div>
+			<button id="upload-button" type="button" class="btn btn-primary">Submit</button>
+		</form>
+
+	</div>
+	<script src="/libs/jquery/dist/jquery.min.js"></script>
+	<script src="/libs/plupload/js/plupload.full.min.js"></script>
+	<script src="/admin/assets/js/upload.js"></script>
+</body>
+</html>

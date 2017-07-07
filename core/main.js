@@ -10,3 +10,6 @@ container.use('/', require('./app'));
 container.set('config', {
 	port: 3000
 });
+
+// load models
+container.set('models', require('./models'));
