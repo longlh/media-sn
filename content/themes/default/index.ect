@@ -20,19 +20,19 @@
 	<div class="container">
 		<div class="center-block text-center">
 			<div class="btn-group">
-				<a class="btn btn-default" href="#" role="button">Prev</a>
-				<a class="btn btn-default" href="#" role="button">Random</a>
-				<a class="btn btn-default" href="#" role="button">Next</a>
+				<a class="btn btn-default" href="<%= @prev %>" role="button">Prev</a>
+				<a class="btn btn-default" href="/" role="button">Random</a>
+				<a class="btn btn-default" href="<%= @next %>" role="button">Next</a>
 			</div>
 		</div>
 		<div class="image-container">
-			<img src="<%= @asset('/img/2.jpg') %>" class="img-responsive center-block" alt="Responsive image">
+			<img src="<%= @upload(@media) %>" class="img-responsive center-block" alt="Responsive image">
 		</div>
 		<div class="center-block text-center">
 			<div class="btn-group">
-				<a class="btn btn-default" href="#" role="button">Prev</a>
-				<a class="btn btn-default" href="#" role="button">Random</a>
-				<a class="btn btn-default" href="#" role="button">Next</a>
+				<a class="btn btn-default" href="<%= @prev %>" role="button">Prev</a>
+				<a class="btn btn-default" href="/" role="button">Random</a>
+				<a class="btn btn-default" href="<%= @next %>" role="button">Next</a>
 			</div>
 		</div>
 	</div>

@@ -8,6 +8,11 @@ const schema = mongoose.Schema({
 	storage: {
 		type: String,
 		required: true
+	},
+	alias: {
+		type: Number,
+		required: true,
+		unique: true
 	}
 });
 

@@ -40,19 +40,18 @@ app.post('/upload', (req, res, next) => {
 				return res.sendStatus(200);
 			}
 
-			// save media
-			let Media = app.parent.get('models').Media;
+			app.parent
+				.get('queue')
+				.create('media', {
+					path: storePath.replace(uploadDir, ''),
+					storage: 'local'
+				})
+				.removeOnComplete(true)
+				.save(() => {
+					console.log('Notified worker');
 
-			let media = new Media({
-				path: storePath.replace(uploadDir, ''),
-				storage: 'local'
-			});
-
-			media.save().then(() => {
-				res.sendStatus(201);
-			}).catch(err => {
-				res.sendStatus(500);
-			});
+					res.sendStatus(201);
+				});
 		});
 
 		ws.on('error', error => {
