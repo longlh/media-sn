@@ -58,3 +58,4 @@ typings/
 .env
 content/**
 !content/.gitinclude
+/config.js

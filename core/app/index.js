@@ -63,23 +63,39 @@ module.exports = config => {
 			return res.redirect('/');
 		}
 
+		let cache = app.parent.get('shared').cache;
+
+		if (cache[alias]) {
+			res.locals.media = cache[alias];
+
+			return next();
+		}
+
 		app.parent.get('models').Media
 			.findOne({
 				alias: alias
 			})
+			.lean()
 			.then(media => {
 				if (!media) {
 					return res.redirect('/');
 				}
 
-				res.render('index', {
-					media: media,
-					prev: media.alias > 0 ?
-						'/' + (media.alias - 1) : '#',
-					next: media.alias < count - 1 ?
-						'/' + (media.alias + 1) : '#'
-				});
+				res.locals.media = cache[alias] = media;
+
+				next();
 			});
+	}, (req, res, next) => {
+		let count = app.parent.get('shared').mediaCount;
+		let media = res.locals.media;
+
+		res.render('index', {
+			media: media,
+			prev: media.alias > 0 ?
+				'/' + (media.alias - 1) : '#',
+			next: media.alias < count - 1 ?
+				'/' + (media.alias + 1) : '#'
+		});
 	});
 
 	return app;

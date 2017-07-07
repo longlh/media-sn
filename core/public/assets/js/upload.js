@@ -5,7 +5,7 @@ $(document).ready(function() {
 		browse_button: 'browse-button',
 		url: '/api/upload',
 		multi_selection: true,
-		chunk_size: '1mb',
+		chunk_size: '512kb',
 		unique_names: true
 	});
 

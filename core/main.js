@@ -17,7 +17,9 @@ const queue = kue.createQueue({
 });
 
 const shared = {
-	mediaCount: 0
+	mediaCount: 0,
+	cache: {},
+	settings: {}
 };
 
 const system = module.exports = express();
