@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<div class="image-container">
-			<img src="<%= @upload(@media) %>" class="img-responsive center-block" alt="Image Feed">
+			<img src="<%= @media.storage == 'local' && @upload(@media) || @media.path %>" class="img-responsive center-block" alt="Image Feed">
 		</div>
 		<div class="center-block text-center">
 			<div class="btn-group">

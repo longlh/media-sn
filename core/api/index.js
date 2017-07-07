@@ -44,8 +44,8 @@ module.exports = config => {
 				app.parent
 					.get('queue')
 					.create('media', {
-						path: storePath.replace(uploadDir, ''),
-						storage: 'local'
+						name: basename,
+						path: storePath
 					})
 					.removeOnComplete(true)
 					.save(() => {

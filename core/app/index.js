@@ -55,7 +55,7 @@ module.exports = config => {
 		res.redirect('/' + picked);
 	});
 
-	app.get('/:alias', (req, res, next) => {
+	app.get('/:alias([0-9]+)', (req, res, next) => {
 		let alias = parseInt(req.params.alias, 10);
 		let count = app.parent.get('shared').mediaCount;
 

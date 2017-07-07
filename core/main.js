@@ -1,7 +1,7 @@
 const express = require('express');
 const kue = require('kue');
 
-const env = 'dev';
+const env = process.env.NODE_ENV || 'dev';
 
 const config = require('../config')[env];
 

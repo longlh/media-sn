@@ -29,8 +29,6 @@ module.exports = function(queue, shared, models, config) {
 		return bluebird.all(promises)
 			.then(() => {
 				shared.settings = settings;
-
-				console.log(shared.settings);
 			});
 	}
 
