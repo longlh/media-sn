@@ -1,0 +1,21 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Setting<% end %>
+
+<div class="container">
+	<form method="post" action="/admin/setting">
+		<div class="form-group">
+			<label>Page Title</label>
+			<input name="page_title" type="text" class="form-control" placeholder="Funny Images Collection" value="<%= @settings['page_title'] %>">
+		</div>
+		<div class="form-group">
+			<label>Code Injection (Header)</label>
+			<textarea name="ci_header" class="form-control" rows="5"><%= @settings['ci_header'] %></textarea>
+		</div>
+		<div class="form-group">
+			<label>Code Injection (Footer)</label>
+			<textarea name="ci_footer" class="form-control" rows="5"><%= @settings['ci_footer'] %></textarea>
+		</div>
+		<button type="submit" class="btn btn-primary">Save</button>
+	</form>
+</div>

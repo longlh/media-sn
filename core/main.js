@@ -40,4 +40,8 @@ system.set('queue', queue);
 system.set('shared', shared);
 
 // start worker
-require('./workers/media')(queue, shared, models, config);
+system.set('workers', {
+	Media: require('./workers/media')(queue, shared, models, config),
+	Setting: require('./workers/setting')(queue, shared, models, config)
+});
+

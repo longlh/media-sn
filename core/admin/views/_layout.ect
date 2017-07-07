@@ -1,0 +1,30 @@
+<!doctype>
+<html>
+<head>
+	<title><% content 'title' %></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+	<% content 'css' %>
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Image Feed</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/admin/upload">Upload</a></li>
+				<li><a href="/admin/setting">Setting</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Login</a></li>
+			</ul>
+		</div>
+	</nav>
+	<% content %>
+	<% content 'script' %>
+	<script src="/libs/jquery/dist/jquery.min.js"></script>
+	<script src="/libs/plupload/js/plupload.full.min.js"></script>
+	<script src="/admin/assets/js/upload.js"></script>
+</body>
+</html>

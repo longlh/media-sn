@@ -40,6 +40,7 @@ module.exports = config => {
 		// view helper
 		res.locals.asset = file => file + '?_=' + Date.now();
 		res.locals.upload = media => '/upload' + media.path;
+		res.locals.settings = app.parent.get('shared').settings;
 
 		// config
 		res.locals.config = app.parent.get('config');

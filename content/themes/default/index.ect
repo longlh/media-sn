@@ -5,12 +5,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link rel="stylesheet" href="<%= @asset('/libs/bootstrap/dist/css/bootstrap.min.css') %>">
 	<link rel="stylesheet" href="<%= @asset('/css/style.css') %>">
+	<% if @settings['ci_header']: %>
+		<%- @settings['ci_header'] %>
+	<% end %>
 </head>
 <body>
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Image Feed</a>
+				<a class="navbar-brand" href="#"><%= @settings['page_title'] || 'Image Feed' %></a>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#">Login</a></li>
@@ -37,5 +40,8 @@
 		</div>
 	</div>
 	<script src="<%= @asset('/js/app.js') %>"></script>
+	<% if @settings['ci_footer']: %>
+		<%- @settings['ci_footer'] %>
+	<% end %>
 </body>
 </html>
