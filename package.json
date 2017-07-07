@@ -7,10 +7,19 @@
   "author": "LongLH <d@dapps.me>",
   "license": "MIT",
   "dependencies": {
+    "aws": "0.0.3-2",
     "bluebird": "3.5.0",
+    "bootstrap": "3.3.7",
     "ect": "0.5.9",
     "express": "4.15.3",
     "mongoose": "4.11.1",
+    "plupload": "2.3.2",
     "redis": "2.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "1.11.0"
+  },
+  "scripts": {
+    "start": "nodemon ./index.js --ignore node_modules --ext js"
   }
 }
