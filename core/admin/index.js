@@ -2,35 +2,39 @@ const express = require('express');
 const ect = require('ect');
 const path = require('path');
 
-const viewDir = path.resolve(
-	__dirname,
-	'views'
-);
+module.exports = config => {
 
-const assetDir = path.resolve(
-	__dirname,
-	'../public/assets'
-);
+	const viewDir = path.resolve(
+		__dirname,
+		'views'
+	);
 
-const app = module.exports = express();
+	const assetDir = path.resolve(
+		__dirname,
+		'../public/assets'
+	);
 
-// config static dir
-app.use('/assets', express.static(assetDir));
+	const app = express();
 
-// config view engine
-app.set('view engine', 'ect');
-app.set('views', viewDir);
-app.engine('ect', ect({
-	watch: true,
-	root: viewDir,
-	ext: '.ect'
-}).render);
+	// config static dir
+	app.use('/assets', express.static(assetDir));
 
+	// config view engine
+	app.set('view engine', 'ect');
+	app.set('views', viewDir);
+	app.engine('ect', ect({
+		watch: true,
+		root: viewDir,
+		ext: '.ect'
+	}).render);
 
-app.get('/', (req, res, next) => {
-	res.redirect(app.mountpath + '/upload');
-});
+	app.get('/', (req, res, next) => {
+		res.redirect(app.mountpath + '/upload');
+	});
 
-app.get('/upload', (req, res, next) => {
-	res.render('upload');
-});
+	app.get('/upload', (req, res, next) => {
+		res.render('upload');
+	});
+
+	return app;
+};

@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+module.exports = (config) => {
+	const mongoose = require('mongoose');
 
-mongoose.Promise = require('bluebird');
-mongoose.connect('mongodb://localhost/image-feed');
+	mongoose.Promise = require('bluebird');
+	mongoose.connect(config.db.url);
 
-module.exports = {
-	Media: require('./_media')
+	return {
+		Media: require('./_media')
+	};
 };

@@ -1,43 +1,43 @@
 const express = require('express');
 const kue = require('kue');
 
-const container = module.exports = express();
+const env = 'dev';
+
+const config = require('../config')[env];
+
+if (!config) {
+	throw new Error('Invalid environment [%s]', env);
+}
+
+const models = require('./models')(config);
 
 const queue = kue.createQueue({
 	prefix: 'if',
-	redis: {
-		port: 6379,
-		host: '127.0.0.1'
-	}
+	redis: config.redis
 });
-
-const config = {
-	port: 3000
-};
 
 const shared = {
 	mediaCount: 0
 };
 
-const models = require('./models');
+const system = module.exports = express();
 
 // load modules
-container.use('/api', require('./api'));
-container.use('/admin', require('./admin'));
-container.use('/', require('./app'));
+system.use('/api', require('./api')(config));
+system.use('/admin', require('./admin')(config));
+system.use('/', require('./app')(config));
 
 // init config
-container.set('config', config);
+system.set('config', config);
 
 // init models
-container.set('models', models);
+system.set('models', models);
 
 // init queue
-container.set('queue', queue);
+system.set('queue', queue);
 
 // init shared data
-container.set('shared', shared);
+system.set('shared', shared);
 
 // start worker
-
 require('./workers/media')(queue, shared, models, config);

@@ -1,4 +1,4 @@
-const container = require('./core/main');
-const port = container.get('config').port;
+const system = require('./core/main');
+const port = system.get('config').server.port;
 
-container.listen(port, () => console.log('Started at :%d', port));
+system.listen(port, () => console.log('Started at :%d', port));
