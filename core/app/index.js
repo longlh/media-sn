@@ -8,26 +8,35 @@ const themeDir = path.resolve(
 	'../../content/themes',
 	themeName
 );
+const libDir = path.resolve(
+	__dirname,
+	'../../node_modules'
+);
 
 const app = module.exports = express();
 
 // config static dir
 app.use(express.static(themeDir));
+app.use('/lib', express.static(libDir));
 
 // config view engine
-const renderer = ect({
+app.set('view engine', 'ect');
+app.engine('ect', ect({
 	watch: true,
 	root: themeDir,
 	ext: '.ect'
-});
-
-app.set('view engine', 'ect');
-app.engine('ect', renderer.render);
+}).render);
 app.set('views', themeDir);
 
 // route
 app.use('/', (req, res, next) => {
-	res.locals.asset = (file) => file;
+	// view helper
+	res.locals.asset = (file) => file + '?_=' + Date.now();
+
+	// config
+	res.locals.config = app.parent.get('config');
+	// console.log(app.parent);
+	console.log(res.locals.config);
 
 	next();
 });

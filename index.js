@@ -1,3 +1,4 @@
 const container = require('./core/main');
+const port = container.get('config').port;
 
-container.listen(3000, () => console.log('Started at :3000'));
+container.listen(port, () => console.log('Started at :%d', port));
