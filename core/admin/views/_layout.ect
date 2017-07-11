@@ -10,14 +10,18 @@
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Image Feed</a>
+				<a class="navbar-brand" href="#">Media Feed</a>
 			</div>
 			<ul class="nav navbar-nav">
 				<li><a href="/admin/upload">Upload</a></li>
 				<li><a href="/admin/setting">Setting</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">Login</a></li>
+				<% if @user: %>
+					<li><a href="/admin/logout">Logout</a></li>
+				<% else: %>
+					<li><a href="/admin/login">Login</a></li>
+				<% end %>
 			</ul>
 		</div>
 	</nav>

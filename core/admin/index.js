@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const bluebird = require('bluebird');
 const bodyParser = require('body-parser');
-const express = require('express');
 const ect = require('ect');
+const express = require('express');
 const path = require('path');
+const session = require('express-session');
 
 module.exports = config => {
 	const viewDir = path.resolve(
@@ -17,6 +18,7 @@ module.exports = config => {
 	);
 
 	const app = express();
+	const passport = require('./passport')(config);
 
 	// config static dir
 	app.use('/assets', express.static(assetDir));
@@ -34,6 +36,54 @@ module.exports = config => {
 	app.use(bodyParser.urlencoded({
 		extended: false
 	}));
+
+	let RedisStore = require('connect-redis')(session);
+
+	app.use(session({
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: true,
+		cookie: { secure: false },
+		store: new RedisStore({
+			host: config.redis.host,
+			port: config.redis.port
+		})
+	}));
+
+	// check authentication
+	app.use(passport.initialize());
+	app.use(passport.session());
+
+	app.get('/oauth/gg', passport.authenticate('google'));
+
+	app.get('/oauth/gg/callback',
+		passport.authenticate('google', {
+			failureRedirect: '/admin/login'
+		}),
+		(req, res) => {
+		// Successful authentication, redirect home.
+			res.redirect('/admin');
+		}
+	);
+
+	app.get('/logout', (req, res, next) => {
+		req.logout();
+
+		res.redirect('/');
+	});
+
+	app.get('/login', (req, res, next) => {
+		res.render('login');
+	});
+
+	app.use((req, res, next) => {
+		if (req.user) {
+			res.locals.user = req.user;
+			return next();
+		}
+
+		res.redirect('/admin/login');
+	});
 
 	app.get('/', (req, res, next) => {
 		res.redirect(app.mountpath + '/upload');

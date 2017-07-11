@@ -1,6 +1,6 @@
 module.exports = {
 	dev: {
-		url: '127.0.0.1:3000',
+		url: 'http://127.0.0.1:3000',
 		server: {
 			port: 3000
 		},
@@ -9,7 +9,7 @@ module.exports = {
 			host: '127.0.0.1'
 		},
 		db: {
-			url: 'mongodb://127.0.0.1/image-feed'
+			url: 'mongodb://127.0.0.1/media-feed'
 		},
 		s3: {
 			accessKeyId: 'xxx',
@@ -17,6 +17,12 @@ module.exports = {
 			bucket: 'zzz',
 			region: 'us-east-1'
 		},
-		theme: 'default'
+		theme: 'default',
+		oauth: {
+			gg: {
+				clientId: 'xxx',
+				clientSecret: 'yyy',
+			}
+		}
 	}
 };
