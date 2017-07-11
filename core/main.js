@@ -24,6 +24,12 @@ const shared = {
 
 const system = module.exports = express();
 
+// log
+system.use(require('morgan')('tiny'));
+
+// remove slash trailing
+system.use(require('connect-slashes')(false));
+
 // load modules
 system.use('/api', require('./api')(config));
 system.use('/admin', require('./admin')(config));
