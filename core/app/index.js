@@ -5,6 +5,7 @@ const random = require('random-int');
 
 module.exports = config => {
 	const app = express();
+	const timestamp = Date.now();
 
 	const themeName = 'default';
 	const themeDir = path.resolve(
@@ -38,7 +39,13 @@ module.exports = config => {
 	// route
 	app.use('/', (req, res, next) => {
 		// view helper
-		res.locals.asset = file => file + '?_=' + Date.now();
+		res.locals.asset = file => {
+			if (config.debug) {
+				return file + '?_=' + Date.now();
+			}
+
+			return file + '?_=' + timestamp;
+		};
 		res.locals.upload = media => '/upload' + media.path;
 		res.locals.settings = app.parent.get('shared').settings;
 
