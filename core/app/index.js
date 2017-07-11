@@ -66,8 +66,14 @@ module.exports = config => {
 		let alias = parseInt(req.params.alias, 10);
 		let count = app.parent.get('shared').mediaCount;
 
-		if (alias < 0 || alias > count - 1) {
-			return res.redirect('/');
+		let desiredAlias = alias % (count + 1);
+
+		if (alias === 0) {
+			return res.redirect('/' + count);
+		} else if (desiredAlias === 0) {
+			return res.redirect('/1');
+		} else if (alias !== desiredAlias) {
+			return res.redirect('/' + desiredAlias);
 		}
 
 		let cache = app.parent.get('shared').cache;
@@ -98,10 +104,8 @@ module.exports = config => {
 
 		res.render('index', {
 			media: media,
-			prev: media.alias > 0 ?
-				'/' + (media.alias - 1) : '#',
-			next: media.alias < count - 1 ?
-				'/' + (media.alias + 1) : '#',
+			prev: '/' + (media.alias - 1),
+			next: '/' + (media.alias + 1),
 			siteUrl: `${req.protocol}://${req.hostname}/${media.alias}`,
 		});
 	});

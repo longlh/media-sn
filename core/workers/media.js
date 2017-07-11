@@ -9,10 +9,6 @@ module.exports = function(queue, shared, models, config) {
 
 	const s3 = new aws.S3(config.s3);
 
-	models.Media.count({}).then(total => {
-		shared.mediaCount = total;
-	});
-
 	const host = config.assetHost || `https://s3${config.s3.region === 'us-east-1' ? '' : `-${config.s3.region}`}.amazonaws.com/${config.s3.bucket}`;
 
 	queue.process('media', function(job, done) {
@@ -37,14 +33,31 @@ module.exports = function(queue, shared, models, config) {
 				let media = new models.Media({
 					path: onlinePath,
 					storage: 'cloud',
-					alias: shared.mediaCount
+					alias: shared.mediaCount + 1
 				});
 
 				return media.save();
 			})
 			.then(media => {
-				shared.mediaCount++;
+				shared.mediaCount = shared.mediaCount + 1;
+
+				console.log('Upload completed, alias: ' + shared.mediaCount);
+				fs.unlink(job.data.path);
 			})
 			.finally(() => done());;
 	});
+
+	countAliases();
+
+	return {
+		countAliases: countAliases
+	};
+
+	function countAliases() {
+		return models.Media.count({}).then(total => {
+			shared.mediaCount = total;
+
+			return total;
+		});
+	}
 };
