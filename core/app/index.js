@@ -107,6 +107,7 @@ module.exports = config => {
 			prev: '/' + (media.alias - 1),
 			next: '/' + (media.alias + 1),
 			siteUrl: `${req.protocol}://${req.hostname}/${media.alias}`,
+			mediaCount: count
 		});
 	});
 
