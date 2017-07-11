@@ -12,7 +12,7 @@ module.exports = config => {
 		(accessToken, refreshToken, profile, cb) => {
 			let email = profile.emails && profile.emails[0] && profile.emails[0].value;
 
-			if (email === 'd@dapps.me') {
+			if (config.admins.includes(email)) {
 				return cb(null, {
 					email
 				});
@@ -23,12 +23,10 @@ module.exports = config => {
 	);
 
 	passport.serializeUser((user, done) => {
-		console.log('serializeUser');
 		done(null, user.email);
 	});
 
 	passport.deserializeUser((email, done) => {
-		console.log('deserializeUser');
 		done(null, {
 			email
 		});

@@ -1,6 +1,6 @@
 module.exports = {
 	dev: {
-		url: 'http://127.0.0.1:3000',
+		url: 'http://yourdomain.com',
 		server: {
 			port: 3000
 		},
@@ -23,6 +23,8 @@ module.exports = {
 				clientId: 'xxx',
 				clientSecret: 'yyy',
 			}
-		}
+		},
+		debug: false,
+		admins: ['admin1@yourdomain.com', 'admin2@yourdomain.com']
 	}
 };

@@ -25,7 +25,9 @@ const shared = {
 const system = module.exports = express();
 
 // log
-system.use(require('morgan')('tiny'));
+if (config.debug) {
+	system.use(require('morgan')('tiny'));
+}
 
 // remove slash trailing
 system.use(require('connect-slashes')(false));
@@ -34,6 +36,11 @@ system.use(require('connect-slashes')(false));
 system.use('/api', require('./api')(config));
 system.use('/admin', require('./admin')(config));
 system.use('/', require('./app')(config));
+
+// handle error
+system.use((error, req, res, next) => {
+	res.sendStatus(500);
+});
 
 // init config
 system.set('config', config);
