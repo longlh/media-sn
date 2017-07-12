@@ -15,7 +15,8 @@ module.exports = {
 			accessKeyId: 'xxx',
 			secretAccessKey: 'yyy',
 			bucket: 'zzz',
-			region: 'us-east-1'
+			region: 'us-east-1',
+			cname: 'yourcdndomain.net'
 		},
 		theme: 'default',
 		oauth: {

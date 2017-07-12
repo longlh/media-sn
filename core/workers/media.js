@@ -9,7 +9,7 @@ module.exports = function(queue, shared, models, config) {
 
 	const s3 = new aws.S3(config.s3);
 
-	const host = config.assetHost || `https://s3${config.s3.region === 'us-east-1' ? '' : `-${config.s3.region}`}.amazonaws.com/${config.s3.bucket}`;
+	const host = config.s3.cname || `https://s3${config.s3.region === 'us-east-1' ? '' : `-${config.s3.region}`}.amazonaws.com/${config.s3.bucket}`;
 
 	queue.process('media', function(job, done) {
 		var contentType = mime.lookup(job.data.path);
