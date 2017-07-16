@@ -4,6 +4,10 @@ module.exports = mongoose => {
 			type: String,
 			required: true
 		},
+		origin: {
+			type: String,
+			required: true
+		},
 		storage: {
 			type: String,
 			required: true

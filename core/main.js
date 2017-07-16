@@ -37,10 +37,12 @@ system.use('/api', require('./api')(config));
 system.use('/admin', require('./admin')(config));
 system.use('/', require('./app')(config));
 
-// handle error
-system.use((error, req, res, next) => {
-	res.sendStatus(500);
-});
+if (config.production) {
+	// handle error
+	system.use((error, req, res, next) => {
+		res.sendStatus(500);
+	});
+}
 
 // init config
 system.set('config', config);
