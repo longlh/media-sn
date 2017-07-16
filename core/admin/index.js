@@ -86,7 +86,20 @@ module.exports = config => {
 	});
 
 	app.get('/', (req, res, next) => {
-		res.redirect(app.mountpath + '/upload');
+		let cachedObjects = _.keys(app.parent.get('shared').cache).length;
+		let mediaCount = app.parent.get('shared').mediaCount;
+
+		res.render('dashboard', {
+			cachedObjects,
+			mediaCount
+		});
+	});
+
+	app.get('/purge-cache', (req, res, next) => {
+		app.parent.get('shared').cache = {};
+		app.parent.get('workers').Media.countMedia();
+
+		res.redirect('/admin');
 	});
 
 	app.get('/upload', (req, res, next) => {

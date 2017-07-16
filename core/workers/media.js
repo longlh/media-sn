@@ -50,10 +50,10 @@ module.exports = function(queue, shared, models, config) {
 			.finally(() => done());
 	});
 
-	countAliases();
+	countMedia();
 
 	return {
-		countAliases: countAliases
+		countMedia: countMedia
 	};
 
 	function createOnineDir() {
@@ -64,7 +64,7 @@ module.exports = function(queue, shared, models, config) {
 		return `${year}-${month}`;
 	}
 
-	function countAliases() {
+	function countMedia() {
 		return models.Media.count({}).then(total => {
 			shared.mediaCount = total;
 

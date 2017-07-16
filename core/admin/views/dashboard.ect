@@ -1,0 +1,18 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Dashboard<% end %>
+
+<div class="container">
+	<h1>System Info</h1>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<span class="badge"><%= @cachedObjects %></span>
+			Number of cached media
+		</li>
+		<li class="list-group-item">
+			<span class="badge"><%= @mediaCount %></span>
+			Total of media in system
+		</li>
+	</ul>
+	<a href="/admin/purge-cache" class="btn btn-primary">Purge cache</a>
+</div>
