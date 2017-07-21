@@ -16,6 +16,15 @@ module.exports = mongoose => {
 			type: Number,
 			required: true,
 			unique: true
+		},
+		width: {
+			type: Number
+		},
+		height: {
+			type: Number
+		},
+		preview: {
+			type: String
 		}
 	});
 
