@@ -14,13 +14,14 @@ const config = require('../config')[env];
 
 const models = require('../core/models')(config);
 
-const DOWNLOAD_DIR = '/home/d/workspace/tmp';
-const PREVIEW_DIR = '/home/d/workspace/tmp/preview';
+const DOWNLOAD_DIR = '';
+
+if (!DOWNLOAD_DIR) {
+	throw Error('Must set DOWNLOAD_DIR to continue');
+}
 
 models.Media
-	.find({
-		alias: 1
-	})
+	.find()
 	.exec()
 	.then(media => {
 		return media.reduce((p, m) => {
@@ -52,13 +53,11 @@ function migrate(m) {
 function generatePreview(m) {
 	let basename = path.basename(m.path);
 	let filepath = path.join(DOWNLOAD_DIR, basename);
-	let output = path.join(PREVIEW_DIR, basename);
 
 	return new bluebird((resolve, reject) => {
 		gm(filepath)
 			.resize(20)
 			.noProfile()
-			// .blur(7, 3)
 			.toBase64('bmp', true, (err, base64) => {
 				console.log(base64);
 
@@ -67,14 +66,7 @@ function generatePreview(m) {
 				}
 
 				resolve(base64);
-			})
-			// .write(output, (err) => {
-			// 	if (err) {
-			// 		return reject(err);
-			// 	}
-
-			// 	resolve();
-			// });
+			});
 	});
 }
 
@@ -104,7 +96,7 @@ function download(m) {
 			throttle: 1e3
 		}))
 			.on('progress', (state) => {
-				console.log('donwloaded %d %...', (state.percent * 100).toFixed(2));
+				console.log('downloaded %d %...', (state.percent * 100).toFixed(2));
 			})
 			.on('error', (err) => {
 				reject(err);
