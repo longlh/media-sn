@@ -102,12 +102,15 @@ module.exports = config => {
 		let count = app.parent.get('shared').mediaCount;
 		let media = res.locals.media;
 
+		let ratio = (media.height / media.width * 100) + '%';
+
 		res.render('index', {
 			media: media,
 			prev: '/' + (media.alias - 1),
 			next: '/' + (media.alias + 1),
 			siteUrl: `${req.protocol}://${req.hostname}/${media.alias}`,
-			mediaCount: count
+			mediaCount: count,
+			ratio: ratio
 		});
 	});
 

@@ -17,6 +17,8 @@
     "express": "4.15.3",
     "express-session": "1.15.3",
     "formidable": "1.1.1",
+    "gm": "1.23.0",
+    "gm-base64": "1.1.1",
     "imagemin": "5.3.1",
     "imagemin-gifsicle": "5.2.0",
     "imagemin-mozjpeg": "6.0.0",
@@ -32,7 +34,9 @@
     "passport-google-oauth20": "1.0.0",
     "plupload": "2.3.2",
     "random-int": "1.0.0",
-    "redis": "2.7.1"
+    "redis": "2.7.1",
+    "request": "2.81.0",
+    "request-progress": "3.0.0"
   },
   "devDependencies": {
     "nodemon": "1.11.0"
