@@ -8,6 +8,9 @@ const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
 const imageminGifsicle = require('imagemin-gifsicle');
 
+const gm = require('gm');
+require('gm-base64');
+
 module.exports = function(queue, shared, models, config) {
 	aws.config.update(config.s3);
 	aws.config.setPromisesDependency(bluebird);
@@ -19,8 +22,20 @@ module.exports = function(queue, shared, models, config) {
 	queue.process('media', function(job, done) {
 		let contentType = mime.lookup(job.data.path);
 		let onlineDir = createOnineDir();
+		let media = new models.Media();
 
-		optimizeMedia(job.data.path, '.optimized')
+		getImageSize(job.data.path)
+			.then(size => {
+				media.width = size.width;
+				media.height = size.height;
+
+				return generatePreview(job.data.path);
+			})
+			.then(previewData => {
+				media.preview = previewData;
+
+				return optimizeMedia(job.data.path, '.optimized');
+			})
 			.then(optimizedPath => {
 				return bluebird.all([
 					uploadToS3(onlineDir + '/' + job.data.name, job.data.path, contentType),
@@ -35,12 +50,12 @@ module.exports = function(queue, shared, models, config) {
 				let originPath = onlinePaths[0];
 				let optimizedPath = onlinePaths[1] || originPath;
 
-				return new models.Media({
-					path: optimizedPath,
-					origin: originPath,
-					storage: 'cloud',
-					alias: shared.mediaCount + 1
-				}).save();
+				media.path = optimizedPath;
+				media.origin = originPath;
+				media.storage = 'cloud';
+				media.alias = shared.mediaCount + 1;
+
+				return media.save(media);
 			})
 			.then(media => {
 				shared.mediaCount = shared.mediaCount + 1;
@@ -55,6 +70,34 @@ module.exports = function(queue, shared, models, config) {
 	return {
 		countMedia: countMedia
 	};
+
+	function getImageSize(p) {
+		return new bluebird((resolve, reject) => {
+			gm(p)
+				.size((err, size) => {
+					if (err) {
+						return reject(err);
+					}
+
+					resolve(size);
+				});
+		});
+	}
+
+	function generatePreview(p) {
+		return new bluebird((resolve, reject) => {
+			gm(p)
+				.resize(20)
+				.noProfile()
+				.toBase64('bmp', true, (err, base64) => {
+					if (err) {
+						return reject(err);
+					}
+
+					resolve(base64);
+				});
+		});
+	}
 
 	function createOnineDir() {
 		let now = new Date();
