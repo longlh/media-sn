@@ -97,6 +97,7 @@ module.exports = config => {
 
 	app.get('/purge-cache', (req, res, next) => {
 		app.parent.get('shared').cache = {};
+		app.parent.get('shared').purgeCache = Date.now();
 		app.parent.get('workers').Media.countMedia();
 
 		res.redirect('/admin');

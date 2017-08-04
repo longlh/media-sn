@@ -17,6 +17,7 @@ const queue = kue.createQueue({
 });
 
 const shared = {
+	purgeCache: Date.now(),
 	mediaCount: 0,
 	cache: {},
 	settings: {}
