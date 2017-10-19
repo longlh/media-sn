@@ -6,6 +6,8 @@ module.exports = (config) => {
 
 	return {
 		Media: require('./_media')(mongoose),
-		Setting: require('./_setting')(mongoose)
+		Setting: require('./_setting')(mongoose),
+		MediaScore: require('./_media-score')(mongoose),
+		VoteHistory: require('./_vote-history')(mongoose)
 	};
 };

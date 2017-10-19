@@ -1,3 +1,5 @@
+const Bluebird = require('bluebird');
+const bodyParser = require('body-parser');
 const express = require('express');
 const ect = require('ect');
 const path = require('path');
@@ -34,6 +36,9 @@ module.exports = config => {
 		root: themeDir,
 		ext: '.ect'
 	}).render);
+
+	app.use(bodyParser.urlencoded({ extended: false }));
+	app.use(bodyParser.json());
 
 	// route
 	app.use('/', (req, res, next) => {
@@ -98,6 +103,18 @@ module.exports = config => {
 				next();
 			});
 	}, (req, res, next) => {
+		const MediaScore = app.parent.get('models').MediaScore;
+
+		MediaScore.findOne({
+			mediaId: res.locals.media._id,
+		})
+		.exec()
+		.then(mediaScore => {
+			res.locals.mediaScore = mediaScore;
+
+			next();
+		});
+	}, (req, res, next) => {
 		let count = app.parent.get('shared').mediaCount;
 		let media = res.locals.media;
 
@@ -111,6 +128,43 @@ module.exports = config => {
 			mediaCount: count,
 			ratio: ratio
 		});
+	});
+
+	app.post('/vote', (req, res, next) => {
+		const MediaScore = app.parent.get('models').MediaScore;
+		const VoteHistory = app.parent.get('models').VoteHistory;
+		const mediaId = req.body.mediaId;
+		const isLike = req.body.type === 'like';
+		const voteHistory = new VoteHistory({
+			mediaId: mediaId,
+			score: isLike ? 1 : -1,
+		});
+
+		Bluebird.all([
+			voteHistory.save(),
+			MediaScore.findOne({
+				mediaId: mediaId,
+			})
+			.exec()
+			.then(mediaScore => {
+				if (!mediaScore) {
+					mediaScore = new MediaScore({
+						mediaId: mediaId,
+						score: isLike ? 1 : -1,
+					});
+
+					return mediaScore.save();
+				}
+
+				const score = isLike ? mediaScore.score + 1 : mediaScore.score - 1;
+
+				return mediaScore.update({
+					score: score,
+				});
+			}),
+		])
+		.then(mediaScore => res.status(201).end())
+		.catch(error => res.status(500).end());
 	});
 
 	return app;
