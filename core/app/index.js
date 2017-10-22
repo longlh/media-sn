@@ -54,7 +54,61 @@ module.exports = config => {
 		next();
 	});
 
-	app.get('/', (req, res, next) => {
+	app.get('', (req, res, next) => {
+		res.redirect('/page/1');
+	});
+
+	app.get('/page/:page', (req, res, next) => {
+		const currentPage = parseInt(req.params.page, 10);
+		const pageSize = app.parent.get('config').pageSize;
+
+		req._skip = (currentPage - 1) * pageSize;
+
+		app.parent.get('models').Media
+			.count()
+			.then(totalMedia => {
+				const totalPage = Math.ceil(totalMedia / pageSize);
+
+				if (currentPage > totalPage || currentPage < 1) {
+					return res.redirect('/page/1');
+				}
+
+				let nextPage = 0;
+				let prevPage = 0;
+
+				if (currentPage === 1) {
+					nextPage = currentPage + 1;
+					prevPage = totalPage;
+				} else if (currentPage === totalPage) {
+					prevPage = currentPage - 1;
+					nextPage = 1;
+				} else {
+					nextPage = currentPage + 1;
+					prevPage = currentPage - 1;
+				}
+
+				res.locals.next = `/page/${nextPage}`;
+				res.locals.prev = `/page/${prevPage}`;
+
+				next();
+			});
+	}, (req, res, next) => {
+		app.parent.get('models').Media
+			.find()
+			.skip(req._skip)
+			.limit(app.parent.get('config').pageSize)
+			.then(media => {
+				res.locals.media = media;
+
+				next();
+			});
+	}, (req, res, next) => {
+		res.render('index', {
+			siteUrl: config.url,
+		});
+	});
+
+	app.get('/random', (req, res, next) => {
 		let count = app.parent.get('shared').mediaCount;
 		let picked = random(count - 1);
 
@@ -103,7 +157,7 @@ module.exports = config => {
 
 		let ratio = (media.height / media.width * 100) + '%';
 
-		res.render('index', {
+		res.render('detail', {
 			media: media,
 			prev: '/' + (media.alias - 1),
 			next: '/' + (media.alias + 1),
