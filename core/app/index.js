@@ -54,12 +54,17 @@ module.exports = config => {
 		next();
 	});
 
-	app.get('', (req, res, next) => {
+	app.get('/', (req, res, next) => {
 		res.redirect('/page/1');
 	});
 
 	app.get('/page/:page', (req, res, next) => {
 		const currentPage = parseInt(req.params.page, 10);
+
+		if (isNaN(currentPage)) {
+			return res.redirect('/page/1');
+		}
+
 		const pageSize = app.parent.get('config').pageSize;
 
 		req._skip = (currentPage - 1) * pageSize;
@@ -165,6 +170,10 @@ module.exports = config => {
 			mediaCount: count,
 			ratio: ratio
 		});
+	});
+
+	app.get('/*', (req, res, next) => {
+		res.redirect('/page/1');
 	});
 
 	return app;
