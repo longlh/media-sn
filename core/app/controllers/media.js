@@ -31,23 +31,51 @@ function listing() {
       const first = totalMedia - (currentPage - 1) * pageSize;
       const last = totalMedia - (currentPage) * pageSize + 1;
 
-      for (let alias = first; alias > last; alias--) {
+      for (let alias = first; alias >= last; alias--) {
         aliases.push(alias);
       }
+
+      // handle cache
+      const cachedMedia = [];
+      const missingAliases = [];
+      let cache = app.parent.get('shared').cache;
+
+      aliases.forEach(alias => {
+        let media = cache[alias];
+
+        if (media) {
+          cachedMedia.push(media);
+        } else {
+          missingAliases.push(alias);
+        }
+      });
 
       app.parent.get('models').Media
         .find({
           alias: {
-            $in: aliases
+            $in: missingAliases
           }
         })
-        .sort('-alias')
-        .exec()
+        .lean()
         .then(media => {
-          res.locals.media = media;
+          const list = cachedMedia.concat(media)
+            .sort((prev, next) => next.alias - prev.alias);
 
-          res.render('list');
+          list.forEach(media => {
+            cache[media.alias] = media;
+          })
+
+          res.locals.media = list;
+
+          next();
         });
+    },
+    (req, res, next) => {
+      const { currentPage } = req._params;
+
+      res.render('list', {
+        page: currentPage
+      });
     }
   ];
 }
