@@ -2,12 +2,7 @@ function listing() {
   return [
     (req, res, next) => {
       const { currentPage, pageSize, totalMedia } = req._params;
-
-      let app = req.app;
-
-      if (isNaN(currentPage)) {
-        return res.redirect('/');
-      }
+      const { app } = req;
 
       const totalPage = Math.ceil(totalMedia / pageSize);
 
@@ -51,7 +46,7 @@ function listing() {
         .then(media => {
           res.locals.media = media;
 
-          res.render('index');
+          res.render('list');
         });
     }
   ];
@@ -97,18 +92,11 @@ function single() {
         });
     },
     (req, res, next) => {
-      let app = req.app;
-      let count = app.parent.get('shared').mediaCount;
-      let media = res.locals.media;
+      let { media } = res.locals;
 
-      let ratio = (media.height / media.width * 100) + '%';
-
-      res.render('detail', {
-        media: media,
-        prev: '/' + (media.alias - 1),
-        next: '/' + (media.alias + 1),
-        mediaCount: count,
-        ratio: ratio
+      res.render('media', {
+        prev: `/${media.alias - 1}`,
+        next: `/${media.alias + 1}`
       });
     }
   ];
