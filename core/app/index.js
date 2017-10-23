@@ -50,6 +50,7 @@ module.exports = config => {
 
 		// config
 		res.locals.config = app.parent.get('config');
+		res.locals.url = req.url;
 
 		next();
 	});
@@ -58,7 +59,7 @@ module.exports = config => {
 		res.redirect('/page/1');
 	});
 
-	app.get('/page/:page', (req, res, next) => {
+	app.get('/page/:page([0-9]+)', (req, res, next) => {
 		const currentPage = parseInt(req.params.page, 10);
 
 		if (isNaN(currentPage)) {
@@ -66,48 +67,55 @@ module.exports = config => {
 		}
 
 		const pageSize = app.parent.get('config').pageSize;
+		const totalMedia = app.parent.get('shared').mediaCount;
 
-		req._skip = (currentPage - 1) * pageSize;
+		const totalPage = Math.ceil(totalMedia / pageSize);
+
+		if (currentPage > totalPage || currentPage < 1) {
+			return res.redirect('/');
+		}
+
+		let nextPage = 0;
+		let prevPage = 0;
+
+		if (currentPage === 1) {
+			nextPage = currentPage + 1;
+			prevPage = totalPage;
+		} else if (currentPage === totalPage) {
+			prevPage = currentPage - 1;
+			nextPage = 1;
+		} else {
+			nextPage = currentPage + 1;
+			prevPage = currentPage - 1;
+		}
+
+		res.locals.next = `/page/${nextPage}`;
+		res.locals.prev = `/page/${prevPage}`;
+
+		const aliases = [];
+		const first = totalMedia - (currentPage - 1) * pageSize;
+		const last = totalMedia - (currentPage) * pageSize + 1;
+
+		for (let alias = first; alias > last; alias--) {
+			aliases.push(alias);
+		}
 
 		app.parent.get('models').Media
-			.count()
-			.then(totalMedia => {
-				const totalPage = Math.ceil(totalMedia / pageSize);
-
-				if (currentPage > totalPage || currentPage < 1) {
-					return res.redirect('/page/1');
+			.find({
+				alias: {
+					$in: aliases
 				}
-
-				let nextPage = 0;
-				let prevPage = 0;
-
-				if (currentPage === 1) {
-					nextPage = currentPage + 1;
-					prevPage = totalPage;
-				} else if (currentPage === totalPage) {
-					prevPage = currentPage - 1;
-					nextPage = 1;
-				} else {
-					nextPage = currentPage + 1;
-					prevPage = currentPage - 1;
-				}
-
-				res.locals.next = `/page/${nextPage}`;
-				res.locals.prev = `/page/${prevPage}`;
-
-				next();
-			});
-	}, (req, res, next) => {
-		app.parent.get('models').Media
-			.find()
-			.skip(req._skip)
-			.limit(app.parent.get('config').pageSize)
+			})
+			.sort('-alias')
+			.exec()
 			.then(media => {
 				res.locals.media = media;
 
 				next();
 			});
 	}, (req, res, next) => {
+
+
 		res.render('index', {
 			siteUrl: config.url,
 		});
