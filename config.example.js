@@ -26,6 +26,7 @@ module.exports = {
 			}
 		},
 		debug: false,
-		admins: ['admin1@yourdomain.com', 'admin2@yourdomain.com']
+		admins: ['admin1@yourdomain.com', 'admin2@yourdomain.com'],
+		pageSize: 30
 	}
 };
