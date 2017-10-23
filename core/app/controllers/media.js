@@ -50,6 +50,13 @@ function listing() {
         }
       });
 
+      if (missingAliases.length === 0) {
+        // all in cache
+        res.locals.media = cachedMedia;
+
+        return next();
+      }
+
       app.parent.get('models').Media
         .find({
           alias: {
