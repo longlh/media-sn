@@ -1,0 +1,16 @@
+.list-group-item-delete {
+	display: inline-block;
+	color: #fff;
+	text-align: center;
+	background-color: #d9534f;
+	border-radius: 50%;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	right: 20px;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	transform: translateY(-50%);
+}

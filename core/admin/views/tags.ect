@@ -1,0 +1,24 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Tags list<% end %>
+
+<% block 'css': %>
+<link rel="stylesheet" href="/admin/assets/css/tags.css">
+<% end %>
+
+<% block 'script': %>
+<script src="/libs/jquery/dist/jquery.min.js"></script>
+<script src="/admin/assets/js/tags.js"></script>
+<% end %>
+
+<div class="container-fluid">
+	<div class="list-group">
+		<% for tag in @tags: %>
+			<div class="list-group-item" id="item-<%= tag._id %>">
+				<h4 class="list-group-item-heading"><%= tag.name %></h4>
+				<p class="list-group-item-text">Slug: <%= tag.slug %></p>
+				<span class="list-group-item-delete" data-id="<%= tag._id %>">X</span>
+			</div>
+		<% end %>
+	</div>
+</div>
