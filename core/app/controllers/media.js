@@ -87,7 +87,7 @@ function listing() {
   ];
 }
 
-function single() {
+function legacySingle() {
   return [
     (req, res, next) => {
       let { alias, totalMedia } = req._params;
@@ -129,6 +129,60 @@ function single() {
     (req, res, next) => {
       let { media } = res.locals;
 
+      res.redirect(`/m/${media.hash}`)
+
+      // res.render('media', {
+      //   prev: `/${media.alias - 1}`,
+      //   next: `/${media.alias + 1}`
+      // });
+    }
+  ];
+}
+
+function single() {
+  return [
+    (req, res, next) => {
+      let { hash, totalMedia } = req._params;
+      let { app } = req;
+
+      app.parent.get('models').Media
+        .findOne({
+          hash: hash
+        })
+        .lean()
+        .then(media => {
+          if (!media) {
+            return res.redirect('/');
+          }
+
+          let alias = media.alias
+
+          let desiredAlias = alias % (totalMedia + 1);
+
+          if (alias === 0) {
+            return res.redirect('/' + totalMedia);
+          } else if (desiredAlias === 0) {
+            return res.redirect('/1');
+          } else if (alias !== desiredAlias) {
+            return res.redirect('/' + desiredAlias);
+          }
+
+          let cache = app.parent.get('shared').cache;
+
+          if (cache[alias]) {
+            res.locals.media = cache[alias];
+
+            return next();
+          }
+
+          res.locals.media = cache[alias] = media;
+
+          next();
+        });
+    },
+    (req, res, next) => {
+      let { media } = res.locals;
+
       res.render('media', {
         prev: `/${media.alias - 1}`,
         next: `/${media.alias + 1}`
@@ -139,5 +193,6 @@ function single() {
 
 module.exports = {
   listing,
-  single
+  single,
+  legacySingle
 };

@@ -90,8 +90,16 @@ module.exports = config => {
 			'alias',
 			'total-media'
 		),
-		media.single()
+		media.legacySingle()
 	);
+
+	app.get('/m/:hash',
+		params.collect({},
+			'hash',
+			'total-media'
+		),
+		media.single()
+	)
 
 	app.get('*', (req, res, next) => {
 		res.redirect('/');
