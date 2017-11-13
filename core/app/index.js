@@ -53,7 +53,7 @@ module.exports = config => {
 
 		// config
 		var config = res.locals.config = app.parent.get('config');
-		res.locals.url = path.join(config.url, req.url);
+		res.locals.url = config.url + req.url;
 
 		next();
 	});
