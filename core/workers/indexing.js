@@ -10,7 +10,7 @@ function generateHash(value) {
   return value
 }
 
-module.exports = function(queue, shared, models, config) {
+module.exports = function(queue, shared, models, config, redis) {
   let Media = models.Media
 
   queue.process('indexing-all', (job, done) => {
@@ -64,18 +64,68 @@ module.exports = function(queue, shared, models, config) {
           })
           .exec()
           .then(media => {
-            if (!next) {
-              return done()
-            }
+            redis
+              .zadd('indexing:all', media.alias, media.hash)
+              .then(() => {
+                if (!next) {
+                  return done()
+                }
 
-            queue
-              .create('indexing', {
-                fromId: media._id
+                queue
+                  .create('indexing', {
+                    fromId: media._id
+                  })
+                  .removeOnComplete(true)
+                  .save(() => done())
               })
-              .removeOnComplete(true)
-              .save(() => done())
+
           })
       }
     )
   })
+
+  return {
+    total: function(tag = 'all') {
+
+    },
+    siblings: function(hash, tag = 'all') {
+      return redis.pipeline()
+        .zcount(`indexing:${tag}`, `-inf`, `+inf`)
+        .zrank(`indexing:${tag}`, hash)
+        .exec()
+        .then(results => {
+          let total = results[0][1]
+          let rank = results[1][1]
+
+          let prevRank = rank - 1
+          let nextRank = (rank + 1 >= total) ? 0 : (rank + 1)
+
+          return redis.pipeline()
+            .zrange(`indexing:${tag}`, prevRank, prevRank)
+            .zrange(`indexing:${tag}`, nextRank, nextRank)
+            .exec()
+        })
+        .then(results => {
+          let prev = results[0][1][0]
+          let next = results[1][1][0]
+
+          return {
+            prev,
+            next
+          }
+        })
+    },
+    prev: function(tag = 'all') {
+
+    },
+    next: function(tag = 'all') {
+
+    },
+    position: function(tag = 'all') {
+
+    },
+    pagination: function(tag = 'all') {
+
+    }
+  }
 }

@@ -11,6 +11,18 @@ function generateHash(value) {
 }
 
 module.exports = function(app) {
+  app.get('/test/:hash', (req, res, next) => {
+    let Indexing = app.parent.get('workers').Indexing
+
+    Indexing
+      .siblings(req.params.hash)
+      .then(({ prev, next }) => {
+        res.json({
+          prev,
+          next
+        })
+      })
+  })
 
 
   app.get('/index', (req, res, next) => {
