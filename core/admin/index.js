@@ -121,5 +121,7 @@ module.exports = config => {
 		});
 	})
 
+	require('./controllers/media')(app)
+
 	return app;
 };

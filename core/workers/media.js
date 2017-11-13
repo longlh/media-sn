@@ -62,7 +62,14 @@ module.exports = function(queue, shared, models, config) {
 
 				console.log('Upload completed, alias: ' + media.alias);
 			})
-			.finally(() => done());
+			.finally(() => {
+				queue
+					.create('indexing', {
+						id: media._id
+					})
+					.removeOnComplete(true)
+					.save(() => done())
+			});
 	});
 
 	countMedia();

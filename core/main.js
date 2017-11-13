@@ -60,6 +60,7 @@ system.set('shared', shared);
 // start worker
 system.set('workers', {
 	Media: require('./workers/media')(queue, shared, models, config),
-	Setting: require('./workers/setting')(queue, shared, models, config)
+	Setting: require('./workers/setting')(queue, shared, models, config),
+	Indexing: require('./workers/indexing')(queue, shared, models, config)
 });
 
