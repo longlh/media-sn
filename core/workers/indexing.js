@@ -121,12 +121,13 @@ module.exports = function(queue, shared, models, config, redis) {
         .zrange(`indexing:${tag}`, position, position)
         .then(result => result[0])
     },
-    pagination: function(page, pageSize, tag = 'all') {
+    pagination: function(page, pageSize, rev = true, tag = 'all') {
       let min = (page - 1) * pageSize
       let max = page * pageSize - 1
 
-      return redis
-        .zrange(`indexing:${tag}`, min, max)
+      return rev ?
+        redis.zrevrange(`indexing:${tag}`, min, max) :
+        redis.zrange(`indexing:${tag}`, min, max)
     },
     startIndex: function() {
       return new bluebird((resolve, reject) => {
