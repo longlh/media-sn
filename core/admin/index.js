@@ -6,6 +6,8 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 
+const dashboard = require('./controllers/dashboard')
+
 module.exports = config => {
 	const viewDir = path.resolve(
 		__dirname,
@@ -85,23 +87,11 @@ module.exports = config => {
 		res.redirect('/admin/login');
 	});
 
-	app.get('/', (req, res, next) => {
-		let cachedObjects = _.keys(app.parent.get('shared').cache).length;
-		let mediaCount = app.parent.get('shared').mediaCount;
+	app.get('/', dashboard.systemInfo())
 
-		res.render('dashboard', {
-			cachedObjects,
-			mediaCount
-		});
-	});
+	app.get('/purge-mem-cache', dashboard.purgeMemCache())
 
-	app.get('/purge-cache', (req, res, next) => {
-		app.parent.get('shared').cache = {};
-		app.parent.get('shared').purgeCache = Date.now();
-		app.parent.get('workers').Media.countMedia();
-
-		res.redirect('/admin');
-	});
+	app.get('/re-index', dashboard.reIndex())
 
 	app.get('/upload', (req, res, next) => {
 		res.render('upload');
@@ -120,8 +110,6 @@ module.exports = config => {
 			res.redirect(app.mountpath + '/setting');
 		});
 	})
-
-	require('./controllers/media')(app)
 
 	return app;
 };

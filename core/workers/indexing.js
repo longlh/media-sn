@@ -1,3 +1,4 @@
+const bluebird = require('bluebird');
 const shortHash = require('shorthash')
 
 function generateHash(value) {
@@ -86,7 +87,7 @@ module.exports = function(queue, shared, models, config, redis) {
 
   return {
     total: function(tag = 'all') {
-
+      return redis.zcard(`indexing:${tag}`)
     },
     siblings: function(hash, tag = 'all') {
       return redis.pipeline()
@@ -115,17 +116,25 @@ module.exports = function(queue, shared, models, config, redis) {
           }
         })
     },
-    prev: function(tag = 'all') {
-
+    pick: function(position, tag = 'all') {
+      return redis
+        .zrange(`indexing:${tag}`, position, position)
+        .then(result => result[0])
     },
-    next: function(tag = 'all') {
+    pagination: function(page, pageSize, tag = 'all') {
+      let min = (page - 1) * pageSize
+      let max = page * pageSize - 1
 
+      return redis
+        .zrange(`indexing:${tag}`, min, max)
     },
-    position: function(tag = 'all') {
-
-    },
-    pagination: function(tag = 'all') {
-
+    startIndex: function() {
+      return new bluebird((resolve, reject) => {
+        queue
+          .create('indexing-all')
+          .removeOnComplete(true)
+          .save(() => resolve())
+      })
     }
   }
 }

@@ -31,7 +31,8 @@ const system = module.exports = express();
 
 // log
 if (config.debug) {
-	system.use(require('morgan')('tiny'));
+	system.use(require('morgan')('tiny'))
+	system.use('/favicon.ico', (req, res) => res.sendStatus(404))
 }
 
 // remove slash trailing

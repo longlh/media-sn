@@ -78,11 +78,11 @@ module.exports = config => {
 	app.get('/random',
 		params.collect({}, 'total-media'),
 		(req, res, next) => {
-			let { totalMedia } = req._params;
-			let picked = random(totalMedia - 1);
+			req._params.alias = random(req._params.totalMedia - 1)
 
-			res.redirect('/' + picked);
-		}
+			next()
+		},
+		media.legacySingle()
 	);
 
 	app.get('/:alias([0-9]+)',
