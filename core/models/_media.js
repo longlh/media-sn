@@ -29,6 +29,9 @@ module.exports = mongoose => {
 		hash: {
 			type: String,
 			index: true
+		},
+		tags: {
+			type: Array
 		}
 	});
 

@@ -1,3 +1,6 @@
+const _ = require('lodash');
+const bluebird = require('bluebird');
+const bodyParser = require('body-parser');
 const express = require('express');
 const fs = require('fs');
 const formidable = require('formidable');
@@ -10,6 +13,8 @@ module.exports = config => {
 	);
 
 	const app = express();
+
+	app.use(bodyParser.json());
 
 	app.post('/upload', (req, res, next) => {
 		var form = new formidable.IncomingForm();
@@ -62,6 +67,35 @@ module.exports = config => {
 
 			rs.pipe(ws);
 		});
+	});
+
+	app.post('/media/tags', (req, res, next) => {
+		const newTags = _.filter(req.body.tags, {
+			isNew: true
+		});
+		const mediaTags = _.map(req.body.tags, 'name');
+
+		return bluebird.all([
+			app.parent.get('models').Media.update({
+				alias: {
+					$in: req.body.aliases
+				}
+			}, {
+				$addToSet: {
+					tags: { $each: mediaTags }
+				}
+			}, {
+				multi: true
+			}),
+			app.parent.get('models').Tag.insertMany(newTags)
+		])
+		.then(() => res.status(201).json(null));
+	});
+
+	app.delete('/tags/:id', (req, res, next) => {
+		app.parent.get('models').Tag.remove({
+			_id: req.params.id
+		}).then(() => res.status(200).end());
 	});
 
 	return app;

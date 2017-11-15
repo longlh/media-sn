@@ -6,6 +6,7 @@ module.exports = (config) => {
 
 	return {
 		Media: require('./_media')(mongoose),
-		Setting: require('./_setting')(mongoose)
+		Setting: require('./_setting')(mongoose),
+		Tag: require('./_tag')(mongoose)
 	};
 };

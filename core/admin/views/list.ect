@@ -1,0 +1,66 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Media list<% end %>
+
+<% block 'css': %>
+<link rel="stylesheet" href="/libs/selectize/dist/css/selectize.default.css">
+<link rel="stylesheet" href="/admin/assets/css/list.css">
+<% end %>
+
+<% block 'script': %>
+<script src="/libs/jquery/dist/jquery.min.js"></script>
+<script src="/libs/microplugin/src/microplugin.js"></script>
+<script src="/libs/sifter/sifter.min.js"></script>
+<script src="/libs/selectize/dist/js/selectize.min.js"></script>
+<script src="/libs/slug/slug.js"></script>
+<script src="/admin/assets/js/list.js"></script>
+<script>
+	window.GLOBAL = window.GLOBAL || {};
+	window.GLOBAL.tags = <%- @_json(@tags) %>;
+</script>
+<% end %>
+
+<div class="container-fluid">
+	<div class="form-group clearfix">
+		<label for="input-tags" class="col-sm-1">Tags:</label>
+		<div class="col-sm-5">
+			<select id="input-tags" multiple>
+				<% for tag in @tags: %>
+					<option value="<%= tag.name %>"><%= tag.name %></option>
+				<% end %>
+			</select>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="btn-add-tags">Add to tags</button>
+		</div>
+	</div>
+
+	<hr>
+
+	<nav class="nav text-right">
+		<a class="nav-link" href="<%= @prev %>">&lt; Prev Page</a>
+		<a class="nav-link" href="<%= @next %>">Next Page &gt;</a>
+	</nav>
+
+	<div class="row media-list" id="media-list">
+		<% for m in @media: %>
+			<div class="col-xs-4 col-sm-3 col-md-2">
+				<div class="media-item" data-alias="<%= m.alias %>">
+					<img src="https://server1.mn-cdn.com/p/topgirls/media?width=200&url=<%= m.path %>" class="media" alt="TopGirls VIP - Picture <%= m.alias %>">
+				</div>
+				<div class="media-tags">
+					<% if m.tags: %>
+						<% for tag in m.tags: %>
+							<a href="#">#<%= tag %></a>
+						<% end %>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+
+	<nav class="nav text-right">
+		<a class="nav-link" href="<%= @prev %>">&lt; Prev Page</a>
+		<a class="nav-link" href="<%= @next %>">Next Page &gt;</a>
+	</nav>
+</div>

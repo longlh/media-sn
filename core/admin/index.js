@@ -5,6 +5,11 @@ const ect = require('ect');
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const slug = require('slug');
+
+const media = require('../app/controllers/media');
+const params = require('../app/controllers/params');
+const tag = require('../app/controllers/tag');
 
 const dashboard = require('./controllers/dashboard')
 
@@ -33,6 +38,13 @@ module.exports = config => {
 		root: viewDir,
 		ext: '.ect'
 	}).render);
+
+	app.use((req, res, next) => {
+		res.locals._json = (data) => {
+			return JSON.stringify(data);
+		};
+		next();
+	});
 
 	// config middlewares
 	app.use(bodyParser.urlencoded({
@@ -96,6 +108,29 @@ module.exports = config => {
 	app.get('/upload', (req, res, next) => {
 		res.render('upload');
 	});
+
+	app.get('/media', params.collect({ currentPage: 1 },
+			'page-size',
+			'total-media'
+		),
+		tag.listing(),
+		media.listing()
+	);
+
+	app.get('/media/page/:page', params.collect({ currentPage: 1 },
+			'page-size',
+			'total-media'
+		),
+		tag.listing(),
+		media.listing()
+	);
+
+	app.get('/tags',
+		tag.listing(),
+		(req, res, next) => {
+			res.render('tags');
+		}
+	);
 
 	app.get('/setting', (req, res, next) => {
 		res.render('setting', {

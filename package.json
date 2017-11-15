@@ -28,6 +28,7 @@
     "kue": "0.11.6",
     "lodash": "4.17.4",
     "materialize-css": "0.99.0",
+    "microplugin": "0.0.3",
     "mime": "1.3.6",
     "mongoose": "4.11.1",
     "morgan": "1.8.2",
@@ -37,7 +38,10 @@
     "random-int": "1.0.0",
     "request": "2.81.0",
     "request-progress": "3.0.0",
-    "shorthash": "0.0.2"
+    "selectize": "0.12.4",
+    "shorthash": "0.0.2",
+    "sifter": "0.5.2",
+    "slug": "0.9.1"
   },
   "devDependencies": {
     "nodemon": "1.11.0"
