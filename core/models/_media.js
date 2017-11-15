@@ -26,6 +26,10 @@ module.exports = mongoose => {
 		preview: {
 			type: String
 		},
+		hash: {
+			type: String,
+			index: true
+		},
 		tags: {
 			type: Array
 		}

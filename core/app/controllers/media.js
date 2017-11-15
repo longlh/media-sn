@@ -27,55 +27,49 @@ function listing() {
       res.locals.next = `/page/${nextPage}`;
       res.locals.prev = `/page/${prevPage}`;
 
-      const aliases = [];
-      const first = totalMedia - (currentPage - 1) * pageSize;
-      const last = totalMedia - (currentPage) * pageSize + 1;
+      let Indexing = app.parent.get('workers').Indexing
+      let Media = app.parent.get('models').Media
+      let cache = app.parent.get('shared').cache
 
-      for (let alias = first; alias >= last; alias--) {
-        aliases.push(alias);
-      }
+      Indexing
+        .pagination(currentPage, pageSize)
+        .then(hashes => {
+          const cachedMedia = []
+          const missedHashes = []
 
-      // handle cache
-      const cachedMedia = [];
-      const missingAliases = [];
-      let cache = app.parent.get('shared').cache;
+          hashes.forEach(hash => {
+            let media = cache[hash]
 
-      aliases.forEach(alias => {
-        let media = cache[alias];
-
-        if (media) {
-          cachedMedia.push(media);
-        } else {
-          missingAliases.push(alias);
-        }
-      });
-
-      if (missingAliases.length === 0) {
-        // all in cache
-        res.locals.media = cachedMedia;
-
-        return next();
-      }
-
-      app.parent.get('models').Media
-        .find({
-          alias: {
-            $in: missingAliases
-          }
-        })
-        .lean()
-        .then(media => {
-          const list = cachedMedia.concat(media)
-            .sort((prev, next) => next.alias - prev.alias);
-
-          list.forEach(media => {
-            cache[media.alias] = media;
+            if (media) {
+              cachedMedia.push(media)
+            } else {
+              missedHashes.push(hash)
+            }
           })
 
-          res.locals.media = list;
+          if (missedHashes.length === 0) {
+            res.locals.media = cachedMedia
 
-          next();
-        });
+            return next()
+          }
+
+          Media
+            .find({
+              hash: { $in: missedHashes }
+            })
+            .lean()
+            .then(media => {
+              const list = cachedMedia.concat(media)
+                .sort((prev, next) => next.alias - prev.alias)
+
+              // put to cache
+              list.forEach(media => cache[media.hash] = media)
+
+              res.locals.media = list
+
+              next();
+            })
+        })
     },
     (req, res, next) => {
       const { currentPage } = req._params;
@@ -87,57 +81,72 @@ function listing() {
   ];
 }
 
-function single() {
+function legacySingle() {
   return [
     (req, res, next) => {
-      let { alias, totalMedia } = req._params;
-      let { app } = req;
+      let { alias, totalMedia } = req._params
+      let { app } = req
 
       let desiredAlias = alias % (totalMedia + 1);
 
-      if (alias === 0) {
-        return res.redirect('/' + totalMedia);
-      } else if (desiredAlias === 0) {
-        return res.redirect('/1');
-      } else if (alias !== desiredAlias) {
-        return res.redirect('/' + desiredAlias);
-      }
+      let Indexing = app.parent.get('workers').Indexing
 
-      let cache = app.parent.get('shared').cache;
+      return Indexing
+        .pick(desiredAlias - 1)
+        .then(hash => {
+          res.redirect(`/m/${hash}`)
+        })
+    }
+  ]
+}
 
-      if (cache[alias]) {
-        res.locals.media = cache[alias];
+function single() {
+  return [
+    (req, res, next) => {
+      let { hash, totalMedia } = req._params
+      let { app } = req
 
-        return next();
+      let cache = app.parent.get('shared').cache
+
+      if (cache[hash]) {
+        res.locals.media = cache[hash]
+
+        return next()
       }
 
       app.parent.get('models').Media
-        .findOne({
-          alias: alias
-        })
+        .findOne({ hash: hash })
         .lean()
         .then(media => {
           if (!media) {
             return res.redirect('/');
           }
 
-          res.locals.media = cache[alias] = media;
+          res.locals.media = cache[hash] = media;
 
           next();
         });
     },
     (req, res, next) => {
-      let { media } = res.locals;
+      let { media } = res.locals
+      let { app } = req
 
-      res.render('media', {
-        prev: `/${media.alias - 1}`,
-        next: `/${media.alias + 1}`
-      });
+      let Indexing = app.parent.get('workers').Indexing
+
+      Indexing
+        .siblings(media.hash)
+        .then(result => {
+          res.render('media', {
+            prev: `/m/${result.prev}`,
+            next: `/m/${result.next}`
+          })
+        })
     }
   ];
 }
 
 module.exports = {
   listing,
-  single
+  single,
+  legacySingle
 };

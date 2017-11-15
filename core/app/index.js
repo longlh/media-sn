@@ -53,7 +53,7 @@ module.exports = config => {
 
 		// config
 		var config = res.locals.config = app.parent.get('config');
-		res.locals.url = path.join(config.url, req.url);
+		res.locals.url = config.url + req.url;
 
 		next();
 	});
@@ -78,11 +78,11 @@ module.exports = config => {
 	app.get('/random',
 		params.collect({}, 'total-media'),
 		(req, res, next) => {
-			let { totalMedia } = req._params;
-			let picked = random(totalMedia - 1);
+			req._params.alias = random(req._params.totalMedia - 1)
 
-			res.redirect('/' + picked);
-		}
+			next()
+		},
+		media.legacySingle()
 	);
 
 	app.get('/:alias([0-9]+)',
@@ -90,8 +90,16 @@ module.exports = config => {
 			'alias',
 			'total-media'
 		),
-		media.single()
+		media.legacySingle()
 	);
+
+	app.get('/m/:hash',
+		params.collect({},
+			'hash',
+			'total-media'
+		),
+		media.single()
+	)
 
 	app.get('*', (req, res, next) => {
 		res.redirect('/');

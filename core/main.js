@@ -1,5 +1,6 @@
 const express = require('express');
 const kue = require('kue');
+const Redis = require('ioredis')
 
 const env = process.env.NODE_ENV || 'dev';
 
@@ -10,7 +11,10 @@ if (!config) {
 }
 
 const models = require('./models')(config);
-
+const redis = new Redis({
+	host: config.redis.host,
+	port: config.redis.port
+})
 const queue = kue.createQueue({
 	prefix: 'if',
 	redis: config.redis
@@ -27,7 +31,8 @@ const system = module.exports = express();
 
 // log
 if (config.debug) {
-	system.use(require('morgan')('tiny'));
+	system.use(require('morgan')('tiny'))
+	system.use('/favicon.ico', (req, res) => res.sendStatus(404))
 }
 
 // remove slash trailing
@@ -57,9 +62,13 @@ system.set('queue', queue);
 // init shared data
 system.set('shared', shared);
 
+// init cache
+system.set('redis', redis);
+
 // start worker
 system.set('workers', {
-	Media: require('./workers/media')(queue, shared, models, config),
-	Setting: require('./workers/setting')(queue, shared, models, config)
+	Media: require('./workers/media')(queue, shared, models, config, redis),
+	Setting: require('./workers/setting')(queue, shared, models, config, redis),
+	Indexing: require('./workers/indexing')(queue, shared, models, config, redis)
 });
 
