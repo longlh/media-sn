@@ -1,13 +1,14 @@
 import { redirectIfUnauthenticated } from 'middlewares/auth'
+import { systemInfo } from './controllers/dashboard'
 
-const authMiddleware = redirectIfUnauthenticated('/admin/login')
+const requiresLogin = redirectIfUnauthenticated('/admin/login')
 
 export default app => {
   app.get('/login', (req, res) => res.render('login'))
 
-  app.get('/', authMiddleware, (req, res, next) => {
-    res.sendStatus(200)
-  })
+  app.get('/', requiresLogin, systemInfo())
+
+  app.get('/upload', requiresLogin, (req, res) => res.render('upload'))
 
   return app
 }

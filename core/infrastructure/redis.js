@@ -1,9 +1,7 @@
 import Redis from 'ioredis'
 
-import config from 'infrastructure/mongoose'
+import config from 'infrastructure/config'
 
-const { host, port } = config.redis
-
-const redis = new Redis({ host, port })
+const redis = new Redis(config.redis)
 
 export default redis

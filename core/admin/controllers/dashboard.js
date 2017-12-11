@@ -1,4 +1,5 @@
-const _ = require('lodash');
+import _ from 'lodash'
+import { get as cacheGet } from 'services/cache'
 
 function purgeMemCache() {
   return [
@@ -28,41 +29,40 @@ function reIndex() {
   ]
 }
 
-function systemInfo() {
+export function systemInfo() {
   return [
+    // (req, res, next) => {
+    //   const cache = req.app.parent.get('shared').cache
+
+    //   res.locals.mediaInMemCache = _.keys(cache).length
+
+    //   next()
+    // },
     (req, res, next) => {
-      const cache = req.app.parent.get('shared').cache
+      cacheGet('media-count')
+        .then(totalMedia => {
+          res.locals.totalMedia = totalMedia || 0
 
-      res.locals.mediaInMemCache = _.keys(cache).length
-
-      next()
-    },
-    (req, res, next) => {
-      const mediaCount = req.app.parent.get('shared').mediaCount
-
-      res.locals.totalMedia = mediaCount
-
-      next()
-    },
-    (req, res, next) => {
-      const Indexing = req.app.parent.get('workers').Indexing
-
-      Indexing
-        .total()
-        .then(total => {
-          res.locals.indexedMedia = total
+          next()
+        }).catch(e => {
+          console.log(e)
 
           next()
         })
     },
+    // (req, res, next) => {
+    //   const Indexing = req.app.parent.get('workers').Indexing
+
+    //   Indexing
+    //     .total()
+    //     .then(total => {
+    //       res.locals.indexedMedia = total
+
+    //       next()
+    //     })
+    // },
     (req, res, next) => {
       res.render('dashboard')
     }
   ]
-}
-
-module.exports = {
-  systemInfo,
-  purgeMemCache,
-  reIndex
 }
