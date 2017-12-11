@@ -1,11 +1,15 @@
 {
-  "name": "image-feed",
+  "name": "media-feed",
   "version": "0.0.1",
   "description": "Single image per view, with prev/next/random navigator",
   "main": "index.js",
-  "repository": "git@github.com:longlh/image-feed.git",
+  "repository": "git@github.com:MediaSocialNetwork/media-feed.git",
   "author": "LongLH <d@dapps.me>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js --exec babel-node --watch core --watch index.js --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
+    "build": "babel index.js -o index.legacy.js"
+  },
   "dependencies": {
     "aws-sdk": "2.82.0",
     "bluebird": "3.5.0",
@@ -41,9 +45,10 @@
     "shorthash": "0.0.2"
   },
   "devDependencies": {
-    "nodemon": "1.11.0"
-  },
-  "scripts": {
-    "start": "nodemon ./index.js --watch core --ignore node_modules --ext js"
+    "babel-cli": "6.26.0",
+    "babel-plugin-module-resolver": "3.0.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-stage-2": "6.24.1",
+    "nodemon": "1.12.5"
   }
 }
