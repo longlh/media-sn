@@ -1,68 +1,69 @@
-const express = require('express');
-const fs = require('fs');
-const formidable = require('formidable');
-const path = require('path');
+import express from 'express'
+import formidable from 'formidable'
+import fs from 'fs'
+import path from 'path'
 
-module.exports = config => {
-	const uploadDir = path.resolve(
-		__dirname,
-		'../../content/upload'
-	);
+import queue from 'infrastructure/kue'
 
-	const app = express();
+const uploadDir = path.resolve(
+  __dirname,
+  '../../content/upload'
+)
 
-	app.post('/upload', (req, res, next) => {
-		var form = new formidable.IncomingForm();
+const app = express()
 
-		form.parse(req, (err, fields, files) => {
-			if (err) {
-				console.log(err);
-			}
+app.post('/upload', (req, res, next) => {
+  const form = new formidable.IncomingForm()
 
-			var basename = fields.name.toLowerCase();
-			var storePath = path.resolve(uploadDir, basename);
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.log(err)
+      return next(err)
+    }
 
-			var chunk = parseInt(fields.chunk);
-			var chunks = parseInt(fields.chunks);
+    var basename = fields.name.toLowerCase()
+    var storePath = path.resolve(uploadDir, basename)
 
-			var rs = fs.createReadStream(files.file.path);
-			var ws = fs.createWriteStream(storePath, {
-				flags: 'a'
-			});
+    var chunk = parseInt(fields.chunk)
+    var chunks = parseInt(fields.chunks)
 
-			ws.on('close', error => {
-				if (error) {
-					console.log(error);
-				}
+    var rs = fs.createReadStream(files.file.path)
+    var ws = fs.createWriteStream(storePath, {
+      flags: 'a'
+    })
 
-				fs.unlink(files.file.path);
+    ws.on('close', err => {
+      if (err) {
+        console.log(err)
+        return next(err)
+      }
 
-				if (chunk < chunks - 1) {
-					return res.sendStatus(200);
-				}
+      fs.unlink(files.file.path)
 
-				app.parent
-					.get('queue')
-					.create('media', {
-						name: basename,
-						path: storePath
-					})
-					.removeOnComplete(true)
-					.save(() => {
-						console.log('Notified worker');
+      if (chunk < chunks - 1) {
+        return res.sendStatus(200)
+      }
 
-						res.sendStatus(201);
-					});
-			});
+      queue
+        .create('media', {
+          name: basename,
+          path: storePath
+        })
+        .removeOnComplete(true)
+        .save(() => {
+          console.log('Notified worker')
 
-			ws.on('error', error => {
-				console.log(error);
-				res.sendStatus(500);
-			});
+          res.sendStatus(201)
+        });
+    });
 
-			rs.pipe(ws);
-		});
-	});
+    ws.on('error', error => {
+      console.log(error)
+      res.sendStatus(500)
+    });
 
-	return app;
-};
+    rs.pipe(ws)
+  })
+})
+
+export default app

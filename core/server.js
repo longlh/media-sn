@@ -18,7 +18,7 @@ if (config.debug) {
 server.use(connectSlashes(false))
 
 // load modules
-// server.use('/api', require('./api').default)
+server.use('/api', require('./api').default)
 server.use('/admin', require('./admin').default)
 // server.use('/', require('./app').default)
 
