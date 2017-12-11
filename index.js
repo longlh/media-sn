@@ -1,6 +1,6 @@
-// const system = require('./core/main');
-// const port = system.get('config').server.port;
+import config from 'infrastructure/config'
+import server from 'server'
 
-// system.listen(port, () => console.log('Started at :%d', port));
+const { port } = config.server
 
-import mongoose from 'infrastructure/mongoose'
+server.listen(port, () => console.log(`Started at ${port}`))
