@@ -130,12 +130,15 @@ module.exports = function(queue, shared, models, config, redis) {
         redis.zrange(`indexing:${tag}`, min, max)
     },
     startIndex: function() {
-      return new bluebird((resolve, reject) => {
-        queue
-          .create('indexing-all')
-          .removeOnComplete(true)
-          .save(() => resolve())
-      })
+      return redis.del(`indexing:all`)
+        .then(() => {
+          return new bluebird((resolve, reject) => {
+            queue
+              .create('indexing-all')
+              .removeOnComplete(true)
+              .save(() => resolve())
+          })
+        })
     }
   }
 }

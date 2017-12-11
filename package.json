@@ -35,6 +35,7 @@
     "passport-google-oauth20": "1.0.0",
     "plupload": "2.3.2",
     "random-int": "1.0.0",
+    "recursive-config": "1.0.1",
     "request": "2.81.0",
     "request-progress": "3.0.0",
     "shorthash": "0.0.2"
@@ -43,6 +44,6 @@
     "nodemon": "1.11.0"
   },
   "scripts": {
-    "start": "nodemon ./index.js --ignore node_modules --ext js"
+    "start": "nodemon ./index.js --watch core --ignore node_modules --ext js"
   }
 }

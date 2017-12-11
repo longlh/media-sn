@@ -3,8 +3,9 @@ const ect = require('ect');
 const path = require('path');
 const random = require('random-int');
 
+const params = require('../middlewares/params');
+
 const media = require('./controllers/media');
-const params = require('./controllers/params');
 
 module.exports = config => {
 	const app = express();
