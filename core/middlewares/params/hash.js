@@ -1,7 +1,5 @@
-module.exports = (req, res, next) => {
-  let { hash } = req.params;
+export default (req, res, next) => {
+  req._params.hash = req.params.hash
 
-  req._params.hash = hash;
-
-  next();
-};
+  next()
+}

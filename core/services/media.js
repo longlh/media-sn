@@ -56,3 +56,10 @@ export function getByHashes(hashes) {
     .lean()
     .exec()
 }
+
+export function getByHash(hash) {
+  return Media
+    .findOne({ hash })
+    .lean()
+    .exec()
+}

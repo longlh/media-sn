@@ -95,3 +95,28 @@ export function getRange(page, pageSize, tag = 'all', rev = true) {
     redis.zrevrange(`indexing:${tag}`, min, max) :
     redis.zrange(`indexing:${tag}`, min, max)
 }
+
+export function getSiblings(hash, tag = 'all') {
+  return redis.pipeline()
+    .zcount(`indexing:${tag}`, `-inf`, `+inf`)
+    .zrank(`indexing:${tag}`, hash)
+    .exec()
+    .then(results => {
+      let total = results[0][1]
+      let rank = results[1][1]
+
+      let prevRank = rank - 1
+      let nextRank = (rank + 1 >= total) ? 0 : (rank + 1)
+
+      return redis.pipeline()
+        .zrange(`indexing:${tag}`, prevRank, prevRank)
+        .zrange(`indexing:${tag}`, nextRank, nextRank)
+        .exec()
+    })
+    .then(results => {
+      let prev = results[0][1][0]
+      let next = results[1][1][0]
+
+      return { prev, next }
+    })
+}

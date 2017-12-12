@@ -1,7 +1,34 @@
-import { getRange } from 'services/indexing'
-import { getByHashes } from 'services/media'
+import { getRange, getSiblings } from 'services/indexing'
+import { getByHash, getByHashes } from 'services/media'
 
-export function list(defaults = {}) {
+export function single() {
+  return [
+    (req, res, next) => {
+      let { hash } = req._params
+
+      getByHash(hash)
+        .then(media => {
+          res.locals.media = media
+
+          next()
+        })
+    },
+    (req, res, next) => {
+      let { hash } = req._params
+
+      getSiblings(hash)
+        .then(siblings => {
+          res.locals.prev = `/m/${siblings.prev}`
+          res.locals.next = `/m/${siblings.next}`
+
+          next()
+        })
+    },
+    (req, res, next) => res.render('media')
+  ]
+}
+
+export function list() {
   return [
     (req, res, next) => {
       const { currentPage, pageSize, totalMedia, tag } = req._params
