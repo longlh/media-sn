@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { get as cacheGet } from 'services/cache'
+import { startIndex } from 'services/indexing'
 
 function purgeMemCache() {
   return [
@@ -16,14 +17,10 @@ function purgeMemCache() {
   ]
 }
 
-function reIndex() {
+export function reIndex() {
   return [
     (req, res, next) => {
-      let Indexing = req.app.parent.get('workers').Indexing
-
-      Indexing
-        .startIndex()
-        .then(() => next())
+      startIndex().then(() => next())
     },
     (req, res, next) => res.redirect('/admin')
   ]

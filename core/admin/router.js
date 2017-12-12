@@ -1,5 +1,5 @@
 import { redirectIfUnauthenticated } from 'middlewares/auth'
-import { systemInfo } from './controllers/dashboard'
+import { systemInfo, reIndex } from './controllers/dashboard'
 import {
   render as renderSetting,
   update as updateSetting
@@ -11,6 +11,7 @@ export default app => {
   app.get('/login', (req, res) => res.render('login'))
 
   app.get('/', requiresLogin, systemInfo())
+  app.get('/re-index', requiresLogin, reIndex())
 
   app.get('/upload', requiresLogin, (req, res) => res.render('upload'))
 

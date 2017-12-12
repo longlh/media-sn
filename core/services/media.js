@@ -14,3 +14,24 @@ export function create(data) {
 
   return media.save()
 }
+
+export function getOneFrom(id) {
+  return Media.findOne({
+    _id: { '$gt': id }
+  }).lean().exec()
+}
+
+export function getOne() {
+  return Media.findOne().lean().exec()
+}
+
+export function get(id) {
+  return Media.findById(id).lean().exec()
+}
+
+export function updateById(_id, data) {
+  return Media
+    .findOneAndUpdate({ _id  }, data, { new: true })
+    .lean()
+    .exec()
+}
