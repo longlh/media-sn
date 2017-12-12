@@ -63,3 +63,4 @@ content/**
 /config.test.js
 /config.prod.js
 /index.legacy.js
+/core.legacy

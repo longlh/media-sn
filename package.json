@@ -7,8 +7,11 @@
   "author": "LongLH <d@dapps.me>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node --watch core --watch index.js --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
-    "build": "babel index.js -o index.legacy.js"
+    "start": "concurrently \"yarn start:server\" \"yarn start:worker-media\" \"yarn start:worker-indexing\"",
+    "start:server": "nodemon core/index.js --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
+    "start:worker-media": "nodemon core/workers/media.js --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
+    "start:worker-indexing": "nodemon core/workers/indexing.js --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
+    "build": "babel core -d core.legacy"
   },
   "dependencies": {
     "aws-sdk": "2.82.0",
@@ -51,6 +54,7 @@
     "babel-plugin-module-resolver": "3.0.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-stage-2": "6.24.1",
+    "concurrently": "3.5.1",
     "nodemon": "1.12.5"
   }
 }
