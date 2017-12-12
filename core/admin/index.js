@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser'
 import connectRedis from 'connect-redis'
 import ect from 'ect'
 import express from 'express'
@@ -26,8 +25,6 @@ app.engine('ect', ect({
   ext: '.ect'
 }).render)
 
-app.use(bodyParser.urlencoded({ extended: false }))
-
 const RedisStore = connectRedis(session)
 
 app.use(session({
@@ -48,15 +45,5 @@ app.get('/oauth/gg', passport.authenticate('google'))
 app.get('/oauth/gg/callback', passport.authenticate('google', {
   failureRedirect: '/admin/login'
 }), (req, res) => res.redirect('/admin'))
-
-// app.use((req, res, next) => {
-//   if (req.user) {
-//     res.locals.user = req.user
-
-//     return next()
-//   }
-
-//   res.redirect('/admin/login')
-// })
 
 export default initRouter(app)
