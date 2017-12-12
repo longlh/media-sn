@@ -44,11 +44,7 @@ export function systemInfo() {
           res.locals.totalMedia = totalMedia || 0
 
           next()
-        }).catch(e => {
-          console.log(e)
-
-          next()
-        })
+        }).catch(err => next(err))
     },
     // (req, res, next) => {
     //   const Indexing = req.app.parent.get('workers').Indexing

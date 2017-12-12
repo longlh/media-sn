@@ -9,11 +9,8 @@ import {
 export function render() {
   return [
     (req, res, next) => {
-      loadSetting()
-        .then(setting => {
+      loadSetting().then(setting => {
           res.locals.setting = setting
-
-          console.log(setting)
 
           next()
         })
