@@ -33,12 +33,16 @@ queue.process('media', (job, done) => {
     upload(`${onlineDir}/${job.data.name}`, job.data.path, {
       contentType: contentType,
       expire: '1m'
+    }).finally(() => {
+      fs.unlinkSync(job.data.path)
     }),
     optimizeImage(job.data.path, outPath).then(optimizedPath => {
-      return upload(`${onlineDir}/optimized/${job.data.name}`, job.data.path, {
+      return upload(`${onlineDir}/optimized/${job.data.name}`, optimizedPath, {
         contentType: contentType,
         expire: '1m'
       })
+    }).finally(() => {
+      fs.unlinkSync(outPath)
     }),
     getMaxAlias()
   ]
