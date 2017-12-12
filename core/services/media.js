@@ -47,3 +47,12 @@ export function count() {
       return cacheSet('total-media', count)
     })
 }
+
+export function getByHashes(hashes) {
+  return Media
+    .find({
+      hash: { $in: hashes }
+    })
+    .lean()
+    .exec()
+}

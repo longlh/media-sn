@@ -1,7 +1,7 @@
-import { get as cacheGet } from 'services/cache'
+import { countIndex } from 'services/indexing'
 
 export default (req, res, next) => {
-  cacheGet('total-media').then(count => {
+  countIndex().then(count => {
     req._params.totalMedia = count
 
     next()

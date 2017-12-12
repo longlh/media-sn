@@ -19,4 +19,29 @@ app.engine('ect', ect({
   ext: '.ect'
 }).render)
 
+if (config.debug) {
+  app.use('/css', express.static(path.resolve(themeDir, 'css')))
+  app.use('/img', express.static(path.resolve(themeDir, 'img')))
+  app.use('/js', express.static(path.resolve(themeDir, 'js')))
+}
+
+app.use((req, res, next) => {
+  // view helper
+  res.locals.asset = file => {
+    if (config.debug) {
+      return file + '?_=' + Date.now()
+    }
+
+    return file
+  }
+  res.locals.upload = media => '/upload' + media.path
+  // res.locals.settings = app.parent.get('shared').settings;
+
+  // config
+  res.locals.config = config
+  res.locals.url = config.url + req.url
+
+  next()
+})
+
 export default initRouter(app)

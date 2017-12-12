@@ -86,3 +86,12 @@ export function index(media) {
 export function countIndex(tag = 'all') {
   return redis.zcard(`indexing:${tag}`)
 }
+
+export function getRange(page, pageSize, tag = 'all', rev = true) {
+  const min = (page - 1) * pageSize
+  const max = page * pageSize - 1
+
+  return rev ?
+    redis.zrevrange(`indexing:${tag}`, min, max) :
+    redis.zrange(`indexing:${tag}`, min, max)
+}
