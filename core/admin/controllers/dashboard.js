@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { get as cacheGet } from 'services/cache'
-import { startIndex } from 'services/indexing'
+import { startIndex, clearIndex, countIndex } from 'services/indexing'
 
 function purgeMemCache() {
   return [
@@ -20,6 +20,9 @@ function purgeMemCache() {
 export function reIndex() {
   return [
     (req, res, next) => {
+      clearIndex().then(() => next())
+    },
+    (req, res, next) => {
       startIndex().then(() => next())
     },
     (req, res, next) => res.redirect('/admin')
@@ -36,12 +39,10 @@ export function systemInfo() {
     //   next()
     // },
     (req, res, next) => {
-      cacheGet('media-count')
-        .then(totalMedia => {
-          res.locals.totalMedia = totalMedia || 0
-
-          next()
-        }).catch(err => next(err))
+      countIndex().then(count => {
+        res.locals.indexedMedia = count
+        next()
+      })
     },
     // (req, res, next) => {
     //   const Indexing = req.app.parent.get('workers').Indexing

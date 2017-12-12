@@ -44,6 +44,18 @@ function addTagIndex(media, tag = 'all') {
   return redis.zadd(`indexing:${tag}`, media.alias, media.hash)
 }
 
+export function clearIndex() {
+  return getAllTags().then(tags => {
+    const allTags = [...tags, 'all']
+
+    const promises = allTags.map(tag => {
+      redis.del(`indexing:${tag}`)
+    })
+
+    return Bluebird.all(promises)
+  })
+}
+
 export function startIndex(data) {
   return new Bluebird((resolve, reject) => {
     queue.create('indexing', data)
@@ -69,4 +81,8 @@ export function index(media) {
     .spread((media, tags) => {
       return updateTagIndex(media, tags)
     }).then(() => (media))
+}
+
+export function countIndex(tag = 'all') {
+  return redis.zcard(`indexing:${tag}`)
 }

@@ -13,13 +13,16 @@ import {
   optimizeImage
 } from 'services/image'
 import {
-  createOnlineDir,
-  upload
-} from 'services/s3'
+  startIndex
+} from 'services/indexing'
 import {
   create as createMedia,
   getMaxAlias
 } from 'services/media'
+import {
+  createOnlineDir,
+  upload
+} from 'services/s3'
 
 queue.process('media', (job, done) => {
   const contentType = mime.lookup(job.data.path)
@@ -57,6 +60,13 @@ queue.process('media', (job, done) => {
         storage: 'cloud',
         alias: maxAlias + 1
       })
-    }).finally(() => done())
+    })
+    .then(media => {
+      return startIndex({ id: media._id })
+    })
+    .finally(() => {
+      console.log(`Media processed`)
+      done()
+    })
     .catch(err => console.log(err))
 })
