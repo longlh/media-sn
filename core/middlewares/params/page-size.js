@@ -1,5 +1,7 @@
-module.exports = (req, res, next) => {
-  req._params.pageSize = req.app.parent.get('config').pageSize;
+import config from 'infrastructure/config'
 
-  next();
-};
+export default (req, res, next) => {
+  req._params.pageSize = config.pageSize
+
+  next()
+}

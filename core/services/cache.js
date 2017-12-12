@@ -17,3 +17,7 @@ export function remove(key) {
   return redis
     .del(`cache:${key}`)
 }
+
+export function incr(key) {
+  return redis.incr(`cache:${key}`)
+}

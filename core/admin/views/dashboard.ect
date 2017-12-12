@@ -6,16 +6,16 @@
 	<h1>System Info</h1>
 	<ul class="list-group">
 		<li class="list-group-item">
-			<span class="badge"><%= @mediaInMemCache %></span>
-			Number of media in MemCache
+			<span class="badge"><%= @totalMedia %></span>
+			Number of media in DB
 		</li>
 		<li class="list-group-item">
-			<span class="badge"><%= @totalMedia %></span>
-			Total of media in system
+			<span class="badge"><%= @mediaInMemCache %></span>
+			Number of cached media
 		</li>
 		<li class="list-group-item">
 			<span class="badge"><%= @indexedMedia %></span>
-			Total of indexed media
+			Number of indexed media
 		</li>
 	</ul>
 	<a href="/admin/purge-mem-cache" class="btn btn-primary">Purge MemCache</a>

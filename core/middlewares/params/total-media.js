@@ -1,5 +1,9 @@
-module.exports = (req, res, next) => {
-  req._params.totalMedia = req.app.parent.get('shared').mediaCount;
+import { get as cacheGet } from 'services/cache'
 
-  next();
-};
+export default (req, res, next) => {
+  cacheGet('total-media').then(count => {
+    req._params.totalMedia = count
+
+    next()
+  })
+}

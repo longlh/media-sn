@@ -1,6 +1,9 @@
-import config from 'infrastructure/config'
+import bootstrap from 'bootstrap'
 import server from 'server'
+import config from 'infrastructure/config'
 
-const { port } = config.server
+bootstrap().then(() => {
+  const { port } = config.server
 
-server.listen(port, () => console.log(`Started at ${port}`))
+  server.listen(port, () => console.log(`Started at ${port}`))
+})

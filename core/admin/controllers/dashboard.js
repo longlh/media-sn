@@ -31,30 +31,18 @@ export function reIndex() {
 
 export function systemInfo() {
   return [
-    // (req, res, next) => {
-    //   const cache = req.app.parent.get('shared').cache
-
-    //   res.locals.mediaInMemCache = _.keys(cache).length
-
-    //   next()
-    // },
+    (req, res, next) => {
+      cacheGet('total-media').then(count => {
+        res.locals.totalMedia = count
+        next()
+      })
+    },
     (req, res, next) => {
       countIndex().then(count => {
         res.locals.indexedMedia = count
         next()
       })
     },
-    // (req, res, next) => {
-    //   const Indexing = req.app.parent.get('workers').Indexing
-
-    //   Indexing
-    //     .total()
-    //     .then(total => {
-    //       res.locals.indexedMedia = total
-
-    //       next()
-    //     })
-    // },
     (req, res, next) => {
       res.render('dashboard')
     }

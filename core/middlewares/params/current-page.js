@@ -1,7 +1,7 @@
-module.exports = (req, res, next) => {
-  let { page } = req.params;
+export default (req, res, next) => {
+  const { page } = req.params
 
-  req._params.currentPage = parseInt(page, 10);
+  req._params.currentPage = parseInt(page, 10)
 
-  next();
-};
+  next()
+}

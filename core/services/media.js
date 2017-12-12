@@ -1,4 +1,5 @@
 import Media from 'models/media'
+import { set as cacheSet, incr as cacheIncr } from 'services/cache'
 
 export function getMaxAlias() {
   return Media.findOne().sort('-alias').lean().exec()
@@ -13,6 +14,10 @@ export function create(data) {
   const media = new Media(data)
 
   return media.save()
+    .then(() => {
+      return cacheIncr('total-media')
+    })
+    .then(() => media)
 }
 
 export function getOneFrom(id) {
@@ -34,4 +39,11 @@ export function updateById(_id, data) {
     .findOneAndUpdate({ _id  }, data, { new: true })
     .lean()
     .exec()
+}
+
+export function count() {
+  return Media.count()
+    .then(count => {
+      return cacheSet('total-media', count)
+    })
 }

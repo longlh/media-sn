@@ -20,7 +20,7 @@ server.use(connectSlashes(false))
 // load modules
 server.use('/api', require('./api').default)
 server.use('/admin', require('./admin').default)
-// server.use('/', require('./app').default)
+server.use('/', require('./app').default)
 
 if (config.production) {
   server.use((error, req, res, next) => {
