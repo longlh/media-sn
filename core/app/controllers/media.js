@@ -1,10 +1,43 @@
-import { getRange, getSiblings } from 'services/indexing'
+import random from 'random-int'
+
+import { getRange, getSiblings, pick as pickIndex } from 'services/indexing'
 import { getByHash, getByHashes } from 'services/media'
+
+export function randomize() {
+  return [
+    (req, res, next) => {
+      req._params.alias = random(req._params.totalMedia - 1)
+
+      next()
+    },
+    ...findByAlias()
+  ]
+}
+
+export function findByAlias() {
+  return [
+    (req, res, next) => {
+      const { alias, totalMedia } = req._params
+
+      const desiredAlias = alias === 0 ? totalMedia : (alias % totalMedia)
+
+      pickIndex(desiredAlias)
+        .then(hash => {
+          res.locals.hash = hash
+
+          next()
+        })
+    },
+    (req, res, next) => {
+      res.redirect(`/m/${res.locals.hash}`)
+    }
+  ]
+}
 
 export function single() {
   return [
     (req, res, next) => {
-      let { hash } = req._params
+      const { hash } = req._params
 
       getByHash(hash)
         .then(media => {
@@ -14,7 +47,7 @@ export function single() {
         })
     },
     (req, res, next) => {
-      let { hash } = req._params
+      const { hash } = req._params
 
       getSiblings(hash)
         .then(siblings => {

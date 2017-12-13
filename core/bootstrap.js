@@ -1,9 +1,9 @@
 import Bluebird from 'bluebird'
 
-import { count as countMedia } from 'services/media'
+import { remove as removeCache } from 'services/cache'
 
 export default () => {
   return Bluebird.all([
-    countMedia()
+    removeCache('setting')
   ])
 }

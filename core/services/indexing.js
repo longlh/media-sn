@@ -120,3 +120,9 @@ export function getSiblings(hash, tag = 'all') {
       return { prev, next }
     })
 }
+
+export function pick(position, tag = 'all') {
+  return redis
+    .zrange(`indexing:${tag}`, position, position)
+    .then(result => result[0])
+}

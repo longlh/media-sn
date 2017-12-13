@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { get as cacheGet } from 'services/cache'
 import { startIndex, clearIndex, countIndex } from 'services/indexing'
+import { count as countMedia } from 'services/media'
 
 function purgeMemCache() {
   return [
@@ -32,7 +33,7 @@ export function reIndex() {
 export function systemInfo() {
   return [
     (req, res, next) => {
-      cacheGet('total-media').then(count => {
+      countMedia().then(count => {
         res.locals.totalMedia = count
         next()
       })

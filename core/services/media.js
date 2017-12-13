@@ -14,10 +14,6 @@ export function create(data) {
   const media = new Media(data)
 
   return media.save()
-    .then(() => {
-      return cacheIncr('total-media')
-    })
-    .then(() => media)
 }
 
 export function getOneFrom(id) {
@@ -43,9 +39,6 @@ export function updateById(_id, data) {
 
 export function count() {
   return Media.count()
-    .then(count => {
-      return cacheSet('total-media', count)
-    })
 }
 
 export function getByHashes(hashes) {

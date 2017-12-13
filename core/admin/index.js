@@ -13,7 +13,7 @@ const app = express()
 
 // setup view engine
 const viewDir = path.resolve(__dirname, 'views')
-const assetDir = path.resolve(__dirname, '../public/assets')
+const assetDir = path.resolve(__dirname, 'assets')
 
 if (!config.production) {
   app.use('/assets/', express.static(assetDir))

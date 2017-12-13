@@ -23,6 +23,13 @@ export function load() {
 
       return Setting.find()
         .then(records => toSettingObject(records))
+        .then(setting => {
+          return Bluebird.all([
+            setting,
+            cacheSet('setting', setting)
+          ])
+        })
+        .spread(setting => setting)
     })
 }
 

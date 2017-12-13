@@ -2,7 +2,9 @@ import params from 'middlewares/params'
 
 import {
   single as renderMedia,
-  list as renderMediaList
+  list as renderMediaList,
+  findByAlias as findMediaByAlias,
+  randomize as renderRandomizeMedia
 } from './controllers/media'
 
 export default app => {
@@ -29,6 +31,16 @@ export default app => {
   app.get('/m/:hash',
     params({}, 'hash'),
     renderMedia()
+  )
+
+  app.get('/:alias([0-9]+)',
+    params({}, 'alias', 'total-media'),
+    findMediaByAlias()
+  )
+
+  app.get('/random',
+    params({}, 'total-media'),
+    renderRandomizeMedia()
   )
 
   return app
