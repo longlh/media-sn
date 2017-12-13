@@ -3,21 +3,21 @@
 <% block 'title': %>Dashboard<% end %>
 
 <div class="container">
-	<h1>System Info</h1>
-	<ul class="list-group">
-		<li class="list-group-item">
-			<span class="badge"><%= @totalMedia %></span>
-			Number of media in DB
-		</li>
-		<li class="list-group-item">
-			<span class="badge"><%= @mediaInMemCache %></span>
-			Number of cached media
-		</li>
-		<li class="list-group-item">
-			<span class="badge"><%= @indexedMedia %></span>
-			Number of indexed media
-		</li>
-	</ul>
-	<a href="/admin/purge-mem-cache" class="btn btn-primary">Purge MemCache</a>
-	<a href="/admin/re-index" class="btn btn-primary">Re-Index</a>
+  <h1>System Info</h1>
+  <ul class="list-group mb-3">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Number of media in DB
+      <span class="badge badge-primary badge-pill"><%= @totalMedia %></span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Number of cached media
+      <span class="badge badge-primary badge-pill"><%= @mediaInMemCache %></span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Number of indexed media
+      <span class="badge badge-primary badge-pill"><%= @indexedMedia %></span>
+    </li>
+  </ul>
+    <a href="/admin/purge-mem-cache" class="btn btn-primary">Purge MemCache</a>
+    <a href="/admin/re-index" class="btn btn-primary">Re-Index</a>
 </div>

@@ -19,5 +19,7 @@ export default app => {
     .get(requiresLogin, renderSetting())
     .post(requiresLogin, updateSetting())
 
+  app.get('/media', (req, res, next) => res.render('media'))
+
   return app
 }

@@ -1,33 +1,46 @@
 <!doctype>
 <html>
 <head>
-	<title><% content 'title' %></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
-	<% content 'css' %>
+  <title><% content 'title' %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+  <% content 'css' %>
 </head>
 <body>
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#"><%= @setting['page_title'] || 'Media Feed' %></a>
-			</div>
-
-			<ul class="nav navbar-nav">
-				<li><a href="/admin">Dashboard</a></li>
-				<li><a href="/admin/upload">Upload</a></li>
-				<li><a href="/admin/setting">Setting</a></li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<% if @user: %>
-					<li><a href="/admin/logout">Logout</a></li>
-				<% else: %>
-					<li><a href="/admin/login">Login</a></li>
-				<% end %>
-			</ul>
-		</div>
-	</nav>
-	<% content %>
-	<% content 'script' %>
+  <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+    <a class="navbar-brand" href="/admin"><%= @setting['page_title'] || 'Media Feed' %></a>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/upload">Upload</a>
+      </li>
+    </ul>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/setting">Setting</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/media">Media <span class="badge badge-secondary badge-pill">New</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/tags">Tags <span class="badge badge-secondary badge-pill">Comming Soon</span></a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav navbar-right">
+      <% if @user: %>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/logout">Logout</a>
+        </li>
+      <% else: %>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/login">Login</a>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+  <br>
+  <% content %>
+  <% content 'script' %>
 </body>
 </html>
