@@ -19,7 +19,7 @@ app.engine('ect', ect({
   ext: '.ect'
 }).render)
 
-if (config.debug) {
+if (!config.production) {
   app.use('/css', express.static(path.resolve(themeDir, 'css')))
   app.use('/img', express.static(path.resolve(themeDir, 'img')))
   app.use('/js', express.static(path.resolve(themeDir, 'js')))

@@ -4,11 +4,15 @@ import morgan from 'morgan'
 import path from 'path'
 
 import config from 'infrastructure/config'
+import loadSetting from 'middlewares/setting'
 
 const server = express()
 
 if (config.debug) {
   server.use(morgan('tiny'))
+}
+
+if (!config.production) {
   server.use('/favicon.ico', (req, res) => res.sendStatus(404))
 
   const libDir = path.resolve(__dirname, '../node_modules')
@@ -16,6 +20,9 @@ if (config.debug) {
 }
 
 server.use(connectSlashes(false))
+
+// always load setting
+server.use(loadSetting)
 
 // load modules
 server.use('/api', require('./api').default)
