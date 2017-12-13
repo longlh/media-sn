@@ -1,6 +1,39 @@
 import Media from 'models/media'
 import { set as cacheSet, incr as cacheIncr } from 'services/cache'
 
+export function restore(ids) {
+  return Media
+    .update({
+      _id: { $in: ids }
+    }, {
+      deleted: false
+    }, {
+      multi: true
+    })
+    .exec()
+}
+
+export function remove(ids) {
+  return Media
+    .update({
+      _id: { $in: ids }
+    }, {
+      deleted: true
+    }, {
+      multi: true
+    })
+    .exec()
+}
+
+
+export function getFrom(id, take) {
+  const query = (!!id) ? { _id: { $gt: id } } : {}
+
+  console.log(!!id, query)
+
+  return Media.find(query).limit(take).lean().exec()
+}
+
 export function getMaxAlias() {
   return Media.findOne().sort('-alias').lean().exec()
     .then(media => {
@@ -18,7 +51,7 @@ export function create(data) {
 
 export function getOneFrom(id) {
   return Media.findOne({
-    _id: { '$gt': id }
+    _id: { $gt: id }
   }).lean().exec()
 }
 

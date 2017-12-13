@@ -1,0 +1,88 @@
+.media {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between
+}
+
+.m-card {
+  width: 200px;
+  height: 200px;
+  margin: 5px;
+  background: whitesmoke;
+  position: relative;
+}
+
+.m-card .media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.m-card .selection {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.m-card .selection.deleted {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100' stroke='black' stroke-width='3'/><path d='M0 0 L100 100' stroke='black' stroke-width='3'/></svg>");
+  background-repeat:no-repeat;
+  background-position:center center
+}
+
+.m-card .checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+.m-card .checkmark {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .3s;
+}
+
+.m-card:hover .checkmark {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.m-card .checkbox:checked ~ .checkmark {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.m-card .checkbox ~ .checkmark:after {
+  font-family: FontAwesome;
+  font-size: 100px;
+  content: "\f10c";
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  display: block;
+  opacity: 0;
+  transition: opacity .3s;
+  text-align: center;
+}
+
+.m-card:hover .checkbox ~ .checkmark:after {
+  opacity: 1;
+}
+
+.m-card .checkbox:checked ~ .checkmark:after {
+  content: "\f05d";
+  opacity: 1;
+}
