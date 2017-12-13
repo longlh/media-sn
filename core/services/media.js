@@ -25,6 +25,15 @@ export function remove(ids) {
     .exec()
 }
 
+export function paging(page, take) {
+  return Media
+    .find()
+    .sort('-alias')
+    .skip((page - 1) * take)
+    .limit(take)
+    .lean()
+    .exec()
+}
 
 export function getFrom(id, take) {
   const query = (!!id) ? { _id: { $gt: id } } : {}

@@ -1,15 +1,20 @@
-import { getFrom as getMediaFrom } from 'services/media'
+import { paging as pagingMedia } from 'services/media'
 
 export function list() {
   return [
     (req, res, next) => {
-      const { f, t = 100 } = req.query
+      const { p = 1, t = 50 } = req.query
 
-      getMediaFrom(f, parseInt(t, 10))
+      if (p > 1) {
+        res.locals.prevPage = parseInt(p, 10) - 1
+      }
+
+      res.locals.nextPage = parseInt(p, 10) + 1
+
+      pagingMedia(parseInt(p, 10), parseInt(t, 10))
         .then(media => {
           res.locals.media = media
-          res.locals.lastId = media.length > 0 ?
-            media[media.length - 1]._id : null
+
 
           next()
         })

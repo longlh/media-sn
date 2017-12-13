@@ -30,7 +30,10 @@
       </div>
     <% end %>
   </div>
-  <% if @lastId: %>
-    <a class="btn btn-primary btn-lg btn-block" href="/admin/media?f=<%= @lastId %>">Load more</a>
-  <% end %>
+  <div class="d-flex justify-content-between flex-row-reverse">
+    <a class="btn btn-primary" href="/admin/media?p=<%= @nextPage %>">Next Page</a>
+    <% if @prevPage: %>
+      <a class="btn btn-primary" href="/admin/media?p=<%= @prevPage %>">Prev Page</a>
+    <% end %>
+  </div>
 </div>

@@ -1,5 +1,6 @@
 import connectSlashes from 'connect-slashes'
 import express from 'express'
+import errorHandler from 'errorhandler'
 import morgan from 'morgan'
 import path from 'path'
 
@@ -30,8 +31,10 @@ server.use('/admin', require('./admin').default)
 server.use('/', require('./app').default)
 
 if (!config.production) {
-  server.use((error, req, res, next) => res.sendStatus(500))
+  server.use(errorHandler())
+}
 
+if (config.production) {
   server.use((req, res, next) => res.redirect('/'))
 }
 
