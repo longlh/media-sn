@@ -1,10 +1,9 @@
-import config from 'infrastructure/config'
 import { getFrom as getMediaFrom } from 'services/media'
 
 export function list() {
   return [
     (req, res, next) => {
-      const { f, t = config.pageSize } = req.query
+      const { f, t = 100 } = req.query
 
       getMediaFrom(f, parseInt(t, 10))
         .then(media => {
