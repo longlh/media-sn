@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser'
 import formidable from 'formidable'
 import fs from 'fs'
 import ms from 'ms'
@@ -5,6 +6,58 @@ import path from 'path'
 
 import config from 'infrastructure/config'
 import queue from 'infrastructure/kue'
+
+import { startIndex } from 'services/indexing'
+import {
+  remove as removeMedia,
+  restore as restoreMedia
+} from 'services/media'
+
+export function restore() {
+  return [
+    bodyParser.json(),
+    (req, res, next) => {
+      const { ids } = req.body
+
+      restoreMedia(ids)
+        .then(() => next())
+    },
+    (req, res, next) => {
+      const { ids } = req.body
+
+      ids
+        .reduce((p, id) => {
+          return p.then(() => startIndex({ id }))
+        }, Promise.resolve())
+        .then(() => next())
+    },
+    (req, res, next) => res.sendStatus(200)
+  ]
+}
+
+export function remove() {
+  return [
+    bodyParser.json(),
+    (req, res, next) => {
+      const { ids } = req.body
+
+      removeMedia(ids)
+        .then(() => {
+          next()
+        })
+    },
+    (req, res, next) => {
+      const { ids } = req.body
+
+      ids
+        .reduce((p, id) => {
+          return p.then(() => startIndex({ id }))
+        }, Promise.resolve())
+        .then(() => next())
+    },
+    (req, res, next) => res.sendStatus(200)
+  ]
+}
 
 export function create() {
   return [

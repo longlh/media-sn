@@ -1,0 +1,36 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Media<% end %>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/admin/assets/css/media.css">
+<% block 'css': %>
+<% end %>
+
+<% block 'script': %>
+<script src="/libs/jquery/dist/jquery.min.js"></script>
+<script src="/admin/assets/js/media.js"></script>
+<% end %>
+
+<div class="container pb-3">
+  <div class="pb-3">
+    <button type="button" class="btn btn-primary" id="restore"><i class="fa fa-undo"></i> Restore</button>
+    <button type="button" class="btn btn-danger" id="delete"><i class="fa fa-trash"></i> Delete</button>
+    <span class="pl-3"><span id="selection-count">0</span> selection(s)</span>
+  </div>
+  <div class="media pb-3">
+    <% for m in @media: %>
+      <div class="m-card">
+        <div class="media">
+          <img src="https://server1.mn-cdn.com/p/test/media?width=200&url=<%= m.path %>">
+        </div>
+        <label class="selection <% if m.deleted :%>deleted<% end %>">
+          <input class="checkbox" type="checkbox" data-ref="<%= m._id %>">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    <% end %>
+  </div>
+  <% if @lastId: %>
+    <a class="btn btn-primary btn-lg btn-block" href="/admin/media?f=<%= @lastId %>">Load more</a>
+  <% end %>
+</div>

@@ -1,6 +1,9 @@
 import { redirectIfUnauthenticated } from 'middlewares/auth'
 import { systemInfo, reIndex } from './controllers/dashboard'
 import {
+  list as renderMediaList
+} from './controllers/media'
+import {
   render as renderSetting,
   update as updateSetting
 } from './controllers/setting'
@@ -18,6 +21,8 @@ export default app => {
   app.route('/setting')
     .get(requiresLogin, renderSetting())
     .post(requiresLogin, updateSetting())
+
+  app.get('/media', renderMediaList())
 
   return app
 }
