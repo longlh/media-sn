@@ -14,6 +14,7 @@ export function list() {
 
           next()
         })
+        .catch(err => next(err))
     },
     (req, res, next) => res.render('media')
   ]
