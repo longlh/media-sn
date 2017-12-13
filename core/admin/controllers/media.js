@@ -6,7 +6,7 @@ export function list() {
     (req, res, next) => {
       const { f, t = config.pageSize } = req.query
 
-      getMediaFrom(f, t)
+      getMediaFrom(f, parseInt(t, 10))
         .then(media => {
           res.locals.media = media
           res.locals.lastId = media.length > 0 ?
