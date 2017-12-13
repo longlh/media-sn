@@ -29,10 +29,10 @@ server.use('/api', require('./api').default)
 server.use('/admin', require('./admin').default)
 server.use('/', require('./app').default)
 
-if (config.production) {
-  server.use((error, req, res, next) => {
-    res.sendStatus(500)
-  })
+if (!config.production) {
+  server.use((error, req, res, next) => res.sendStatus(500))
+
+  server.use((req, res, next) => res.redirect('/'))
 }
 
 export default server

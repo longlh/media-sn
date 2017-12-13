@@ -96,8 +96,6 @@ export function list() {
 
       getRange(currentPage, pageSize, tag)
         .then(hashes => {
-          console.log(hashes)
-
           res.locals.hashes = hashes
 
           next()
@@ -110,7 +108,6 @@ export function list() {
         next()
       })
     },
-    // (req, res, next) => res.sendStatus(200)
     (req, res, next) => res.render('list')
   ]
 }
