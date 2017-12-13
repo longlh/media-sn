@@ -59,3 +59,8 @@ typings/
 content/**
 !content/.gitinclude
 /config.js
+/config.dev.js
+/config.test.js
+/config.prod.js
+/index.legacy.js
+/core.legacy

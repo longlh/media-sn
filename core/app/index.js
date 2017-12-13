@@ -1,109 +1,47 @@
-const express = require('express');
-const ect = require('ect');
-const path = require('path');
-const random = require('random-int');
+import ect from 'ect'
+import express from 'express'
+import path from 'path'
+import random from 'random-int'
 
-const media = require('./controllers/media');
-const params = require('./controllers/params');
+import config from 'infrastructure/config'
 
-module.exports = config => {
-	const app = express();
+import initRouter from './router'
 
-	const themeName = 'default';
-	const themeDir = path.resolve(
-		__dirname,
-		'../../content/themes',
-		config.theme
-	);
-	const libDir = path.resolve(
-		__dirname,
-		'../../node_modules'
-	);
-	const uploadDir = path.resolve(
-		__dirname,
-		'../../content/upload'
-	);
+const app = express()
 
-	// config static dir
-	app.use(express.static(themeDir));
-	app.use('/libs', express.static(libDir));
-	app.use('/upload', express.static(uploadDir));
+// setup view engine
+const themeDir = path.resolve(__dirname, '../../content/themes', config.theme)
+app.set('view engine', 'ect')
+app.set('views', themeDir)
+app.engine('ect', ect({
+  watch: true,
+  root: themeDir,
+  ext: '.ect'
+}).render)
 
-	// config view engine
-	app.set('view engine', 'ect');
-	app.set('views', themeDir);
-	app.engine('ect', ect({
-		watch: true,
-		root: themeDir,
-		ext: '.ect'
-	}).render);
+if (!config.production) {
+  app.use('/css', express.static(path.resolve(themeDir, 'css')))
+  app.use('/img', express.static(path.resolve(themeDir, 'img')))
+  app.use('/js', express.static(path.resolve(themeDir, 'js')))
+}
 
-	// route
-	app.use((req, res, next) => {
-		// view helper
-		res.locals.asset = file => {
-			if (config.debug) {
-				return file + '?_=' + Date.now();
-			}
+app.use((req, res, next) => {
+  // view helper
+  res.locals.asset = file => {
+    if (config.debug) {
+      return file + '?_=' + Date.now()
+    }
 
-			return file + '?_=' + app.parent.get('shared').purgeCache;
-		};
-		res.locals.upload = media => '/upload' + media.path;
-		res.locals.settings = app.parent.get('shared').settings;
+    return file
+  }
+  res.locals.upload = media => '/upload' + media.path
+  // res.locals.settings = app.parent.get('shared').settings;
 
-		// config
-		var config = res.locals.config = app.parent.get('config');
-		res.locals.url = config.url + req.url;
+  // config
+  res.locals.config = config
+  res.locals.url = config.url + req.url
 
-		next();
-	});
+  next()
+})
 
-	app.get('/',
-		params.collect({ currentPage: 1 },
-			'page-size',
-			'total-media'
-		),
-		media.listing()
-	);
-
-	app.get('/page/:page([0-9]+)',
-		params.collect({},
-			'current-page',
-			'page-size',
-			'total-media'
-		),
-		media.listing()
-	);
-
-	app.get('/random',
-		params.collect({}, 'total-media'),
-		(req, res, next) => {
-			req._params.alias = random(req._params.totalMedia - 1)
-
-			next()
-		},
-		media.legacySingle()
-	);
-
-	app.get('/:alias([0-9]+)',
-		params.collect({},
-			'alias',
-			'total-media'
-		),
-		media.legacySingle()
-	);
-
-	app.get('/m/:hash',
-		params.collect({},
-			'hash',
-			'total-media'
-		),
-		media.single()
-	)
-
-	app.get('*', (req, res, next) => {
-		res.redirect('/');
-	});
-
-	return app;
-};
+export default initRouter(app)

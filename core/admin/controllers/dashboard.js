@@ -1,4 +1,7 @@
-const _ = require('lodash');
+import _ from 'lodash'
+import { get as cacheGet } from 'services/cache'
+import { startIndex, clearIndex, countIndex } from 'services/indexing'
+import { count as countMedia } from 'services/media'
 
 function purgeMemCache() {
   return [
@@ -15,54 +18,34 @@ function purgeMemCache() {
   ]
 }
 
-function reIndex() {
+export function reIndex() {
   return [
     (req, res, next) => {
-      let Indexing = req.app.parent.get('workers').Indexing
-
-      Indexing
-        .startIndex()
-        .then(() => next())
+      clearIndex().then(() => next())
+    },
+    (req, res, next) => {
+      startIndex().then(() => next())
     },
     (req, res, next) => res.redirect('/admin')
   ]
 }
 
-function systemInfo() {
+export function systemInfo() {
   return [
     (req, res, next) => {
-      const cache = req.app.parent.get('shared').cache
-
-      res.locals.mediaInMemCache = _.keys(cache).length
-
-      next()
+      countMedia().then(count => {
+        res.locals.totalMedia = count
+        next()
+      })
     },
     (req, res, next) => {
-      const mediaCount = req.app.parent.get('shared').mediaCount
-
-      res.locals.totalMedia = mediaCount
-
-      next()
-    },
-    (req, res, next) => {
-      const Indexing = req.app.parent.get('workers').Indexing
-
-      Indexing
-        .total()
-        .then(total => {
-          res.locals.indexedMedia = total
-
-          next()
-        })
+      countIndex().then(count => {
+        res.locals.indexedMedia = count
+        next()
+      })
     },
     (req, res, next) => {
       res.render('dashboard')
     }
   ]
-}
-
-module.exports = {
-  systemInfo,
-  purgeMemCache,
-  reIndex
 }
