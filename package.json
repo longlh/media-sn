@@ -11,7 +11,8 @@
     "start:server": "nodemon core --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
     "start:worker-media": "nodemon core/workers/media --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
     "start:worker-indexing": "nodemon core/workers/indexing --exec babel-node --watch core --watch config.dev.js --ignore node_modules --ext js --CONFIG=config.dev.js",
-    "build": "babel core -d core.legacy && cp -r core/admin/views core.legacy/admin/views && cp -r core/admin/public core.legacy/admin/public"
+    "build": "babel core -d core.legacy && cp -a core/admin/views/. core.legacy/admin/views && cp -a core/admin/public/. core.legacy/admin/public",
+    "build:clean": "rm -rf core.legacy"
   },
   "dependencies": {
     "aws-sdk": "2.82.0",
