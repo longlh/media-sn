@@ -51,7 +51,8 @@
     "recursive-config": "1.0.1",
     "request": "2.81.0",
     "request-progress": "3.0.0",
-    "shorthash": "0.0.2"
+    "shorthash": "0.0.2",
+    "slug": "0.9.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

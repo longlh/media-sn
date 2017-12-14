@@ -6,8 +6,15 @@ const schema = mongoose.Schema({
     required: true,
     unique: true
   },
+  name: {
+    type: String
+  },
   description: {
     type: String
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 })
 
