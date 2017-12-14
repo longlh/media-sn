@@ -12,6 +12,11 @@ const requiresLogin = redirectIfUnauthenticated('/admin/login')
 
 export default app => {
   app.get('/login', (req, res) => res.render('login'))
+  app.get('/logout', (req, res, next) => {
+    req.logout();
+
+    res.redirect('/admin/login');
+  })
 
   app.get('/', requiresLogin, systemInfo())
   app.get('/re-index', requiresLogin, reIndex())

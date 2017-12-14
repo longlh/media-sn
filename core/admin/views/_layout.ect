@@ -30,11 +30,16 @@
     <ul class="navbar-nav navbar-right">
       <% if @user: %>
         <li class="nav-item">
-          <a class="nav-link" href="/admin/logout">Logout</a>
+          <a class="nav-link" href="/admin/logout">
+            <img src="<%= @user.avatar %>" width="36" height="36" style="margin: -1rem 0.5rem;">
+            <span>Logout</span>
+          </a>
         </li>
       <% else: %>
         <li class="nav-item">
-          <a class="nav-link" href="/admin/login">Login</a>
+          <a class="nav-link" href="/admin/login">
+            <span>Login</span>
+          </a>
         </li>
       <% end %>
     </ul>
