@@ -1,8 +1,14 @@
 # media-feed
 Fullstack JS opensource CMS to quickly develop a media feed system
 
-## Environment
-Install GM: https://github.com/aheckmann/gm
+## Environment Guideline
+
+- Ubuntu 16.04
+- [Node 8](https://github.com/creationix/nvm)
+- [MongoDB](https://docs.mongodb.com/v3.4/installation/)
+- [Redis](https://www.rosehosting.com/blog/how-to-install-configure-and-use-redis-on-ubuntu-16-04/)
+- [GM](https://github.com/aheckmann/gm)
+- [Yarn](https://www.npmjs.com/package/yarn)
 
 ## Development
 ```
