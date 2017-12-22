@@ -7,7 +7,7 @@ Fullstack JS opensource CMS to quickly develop a media feed system
 - [Node 8](https://github.com/creationix/nvm)
 - [MongoDB](https://docs.mongodb.com/v3.4/installation/)
 - [Redis](https://www.rosehosting.com/blog/how-to-install-configure-and-use-redis-on-ubuntu-16-04/)
-- [GM](https://github.com/aheckmann/gm)
+- [GM](https://gist.github.com/witooh/089eeac4165dfb5ccf3d)
 - [Yarn](https://www.npmjs.com/package/yarn)
 
 ## Development
