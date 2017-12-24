@@ -23,6 +23,10 @@
   align-items: center;
 }
 
+.m-card .media img {
+  max-width: 100%;
+}
+
 .m-card .selection {
   position: absolute;
   z-index: 1;
