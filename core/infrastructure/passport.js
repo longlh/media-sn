@@ -1,5 +1,6 @@
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+import { Strategy as FacebookStrategy } from 'passport-facebook'
 
 import config from 'infrastructure/config'
 
@@ -18,6 +19,19 @@ passport.use(
     }
 
     return cb(new Error('Invalid Credential'))
+  })
+)
+
+passport.use(
+  new FacebookStrategy({
+    clientID: config.oauth.facebook.clientId,
+    clientSecret: config.oauth.facebook.clientSecret,
+    callbackURL: `${config.url}/auth/facebook/callback`,
+    enableProof: true,
+    scope: ['email'],
+    profileFields: ['id', 'displayName', 'picture', 'email', 'link']
+  }, (accessToken, refreshToken, profile, cb) => {
+
   })
 )
 
