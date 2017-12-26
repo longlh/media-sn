@@ -1,6 +1,7 @@
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { Strategy as FacebookStrategy } from 'passport-facebook'
+import { extract as extractProfile } from 'services/oauth-profile'
 
 import config from 'infrastructure/config'
 
@@ -31,7 +32,7 @@ passport.use(
     scope: ['email'],
     profileFields: ['id', 'displayName', 'picture', 'email', 'link']
   }, (accessToken, refreshToken, profile, cb) => {
-
+    return cb(null, extractProfile(profile, 'facebook'))
   })
 )
 

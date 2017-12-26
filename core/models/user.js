@@ -2,12 +2,9 @@ import mongoose from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
   displayName: String,
-  defaultProvider: String,
-  accounts: [{
-    uid: String,
-    provider: String,
-    password: String
-  }],
+  uid: String,
+  provider: String,
+  password: String,
   roles: [{
     type: String
   }],
