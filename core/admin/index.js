@@ -44,7 +44,11 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.get('/oauth/gg', passport.authenticate('google'))
+app.get('/oauth/fb', passport.authenticate('facebook'))
 app.get('/oauth/gg/callback', passport.authenticate('google', {
+  failureRedirect: '/admin/login'
+}), (req, res) => res.redirect('/admin'))
+app.get('/oauth/fb/callback', passport.authenticate('facebook', {
   failureRedirect: '/admin/login'
 }), (req, res) => res.redirect('/admin'))
 

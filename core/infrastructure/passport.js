@@ -14,7 +14,6 @@ passport.use(
   },
   (accessToken, refreshToken, profile, cb) => {
     const email = profile.emails && profile.emails[0] && profile.emails[0].value
-
     if (config.admins.includes(email)) {
       return cb(null, { email })
     }
@@ -27,11 +26,12 @@ passport.use(
   new FacebookStrategy({
     clientID: config.oauth.facebook.clientId,
     clientSecret: config.oauth.facebook.clientSecret,
-    callbackURL: `${config.url}/auth/facebook/callback`,
+    callbackURL: `${config.url}/auth/fb/callback`,
     enableProof: true,
     scope: ['email'],
     profileFields: ['id', 'displayName', 'picture', 'email', 'link']
   }, (accessToken, refreshToken, profile, cb) => {
+    console.log('profile', profile);
     return cb(null, extractProfile(profile, 'facebook'))
   })
 )
