@@ -12,17 +12,17 @@ const app = express()
 // setup view engine
 const themeDir = path.resolve(__dirname, '../../content/themes', config.theme)
 app.set('view engine', 'ect')
-app.set('views', themeDir)
+app.set('views', themeDir + '/views')
 app.engine('ect', ect({
   watch: true,
-  root: themeDir,
+  root: themeDir + '/views',
   ext: '.ect'
 }).render)
 
 if (!config.production) {
-  app.use('/css', express.static(path.resolve(themeDir, 'css')))
-  app.use('/img', express.static(path.resolve(themeDir, 'img')))
-  app.use('/js', express.static(path.resolve(themeDir, 'js')))
+  app.use('/css', express.static(path.resolve(themeDir, 'public/assets/css')))
+  app.use('/img', express.static(path.resolve(themeDir, 'public/assets/img')))
+  app.use('/js', express.static(path.resolve(themeDir, 'public/assets/js')))
 }
 
 app.use((req, res, next) => {
