@@ -22,7 +22,7 @@
     <% for m in @media: %>
       <div class="m-card">
         <div class="media">
-          <img src="https://server1.mn-cdn.com/p/test/media?width=200&url=<%= m.path %>">
+          <img src="https://server1.mn-cdn.com/p/topgirls/media?w=200&h=200&m=crop&src=<%= m.path %>">
         </div>
         <label class="selection <% if m.deleted :%>deleted<% end %>">
           <input class="checkbox" type="checkbox" data-ref="<%= m._id %>">
