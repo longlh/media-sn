@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Single image per view, with prev/next/random navigator",
   "main": "index.js",
-  "repository": "git@github.com:MediaSocialNetwork/media-feed.git",
+  "repository": "git@github.com:MediaNetwork/media-feed.git",
   "author": "LongLH <d@dapps.me>",
   "license": "MIT",
   "scripts": {
