@@ -1,0 +1,90 @@
+<% extend '_layout' %>
+
+<% block 'title': %>Tags<% end %>
+<% block 'css': %>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<% end %>
+
+<% block 'script': %>
+<script src="/libs/jquery/dist/jquery.min.js"></script>
+<script src="/libs/slug/slug-browser.js"></script>
+<script src="/admin/assets/js/tag.js"></script>
+<% end %>
+
+<div class="container">
+  <form method="post" action="/admin/tags">
+    <input type="hidden" name="showDeleted" value="<%= @showDeleted %>">
+    <div class="row">
+      <div class="form-group col-2">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" id="name">
+      </div>
+      <div class="form-group col-2">
+        <label for="slug">Slug</label>
+        <input type="text" class="form-control" name="slug" id="slug">
+      </div>
+      <div class="form-group col-5">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" name="description">
+      </div>
+      <div class="form-group col-1">
+        <label for="action">&nbsp;</label>
+        <button type="submit" name="action" value="create" class="btn btn-primary btn-block">
+          &nbsp;<i class="fa fa-plus"></i>&nbsp;
+        </button>
+      </div>
+    </div>
+  </form>
+  <div>
+    <label class="custom-control custom-checkbox">
+      <input id="show-deleted" type="checkbox" class="custom-control-input" <% if @showDeleted: %>checked<% end %>>
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">Show deleted tags</span>
+    </label>
+  </div>
+  <% for tag in @tags: %>
+    <form method="post" action="/admin/tags/<%= tag.slug %>">
+      <input type="hidden" name="showDeleted" value="<%= @showDeleted %>">
+      <div class="row">
+        <div class="form-group col-2">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" name="name" value="<%= tag.name %>">
+        </div>
+        <div class="form-group col-2">
+          <label for="slug">Slug</label>
+          <input type="text" class="form-control" name="slug" value="<%= tag.slug %>" readonly>
+        </div>
+        <div class="form-group col-5">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" name="description" value="<%= tag.description %>">
+        </div>
+        <div class="form-group col-1">
+          <label for="action">&nbsp;</label>
+          <button type="submit" name="action" value="update" class="btn btn-primary btn-block">
+            &nbsp;<i class="fa fa-floppy-o"></i>&nbsp;
+          </button>
+        </div>
+        <div class="form-group col-1">
+          <label for="action">&nbsp;</label>
+          <% if tag.deleted: %>
+            <button type="submit" name="action" value="restore" class="btn btn-secondary btn-block">
+              &nbsp;<i class="fa fa-undo"></i>&nbsp;
+            </button>
+          <% else: %>
+            <button type="submit" name="action" value="delete" class="btn btn-danger btn-block">
+              &nbsp;<i class="fa fa-trash"></i>&nbsp;
+            </button>
+          <% end %>
+        </div>
+        <% if tag.deleted: %>
+          <div class="form-group col-1">
+            <label for="action">&nbsp;</label>
+            <button type="submit" name="action" value="purge" class="btn btn-danger btn-block">
+              &nbsp;<i class="fa fa-times"></i>&nbsp;
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </form>
+  <% end %>
+</div>

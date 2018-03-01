@@ -1,8 +1,13 @@
+import md5 from 'md5'
+
 export function redirectIfUnauthenticated(redirectTo) {
   return (req, res, next) => {
-    if (!req.user) return res.redirect(redirectTo)
+    const { user } = req
 
-    res.locals.user = req.user
+    if (!user) return res.redirect(redirectTo)
+
+    user.avatar = `//www.gravatar.com/avatar/${md5(req.user.email)}?d=identicon&f=y&s=36`
+    res.locals.user = user
     next()
   }
 }

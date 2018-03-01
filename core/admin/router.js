@@ -7,11 +7,21 @@ import {
   render as renderSetting,
   update as updateSetting
 } from './controllers/setting'
+import {
+  create as createTag,
+  update as updateTag,
+  list as renderTagList
+} from './controllers/tag'
 
 const requiresLogin = redirectIfUnauthenticated('/admin/login')
 
 export default app => {
   app.get('/login', (req, res) => res.render('login'))
+  app.get('/logout', (req, res, next) => {
+    req.logout();
+
+    res.redirect('/admin/login');
+  })
 
   app.get('/', requiresLogin, systemInfo())
   app.get('/re-index', requiresLogin, reIndex())
@@ -23,6 +33,11 @@ export default app => {
     .post(requiresLogin, updateSetting())
 
   app.get('/media', renderMediaList())
+
+  app.get('/tags', renderTagList())
+  app.post('/tags', createTag())
+
+  app.post('/tags/:slug', updateTag())
 
   return app
 }
