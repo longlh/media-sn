@@ -8,6 +8,7 @@ import config from 'infrastructure/config'
 import initRouter from './router'
 
 const app = express()
+const timestamp = Date.now()
 
 // setup view engine
 const themeDir = path.resolve(__dirname, '../../content/themes', config.theme)
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
       return file + '?_=' + Date.now()
     }
 
-    return file
+    return file + '?_=' + timestamp
   }
   res.locals.upload = media => '/upload' + media.path
   // res.locals.settings = app.parent.get('shared').settings;
