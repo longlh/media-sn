@@ -26,6 +26,9 @@ module.exports = {
       clientSecret: 'yyy',
     }
   },
+  sitemap: {
+    ttl: 600 * 1e3
+  },
   debug: true,
   production: false,
   admins: ['admin1@yourdomain.com', 'admin2@yourdomain.com'],
