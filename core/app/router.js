@@ -7,6 +7,10 @@ import {
   randomize as renderRandomizeMedia
 } from './controllers/media'
 
+import {
+  generate as generateSitemap
+} from  './controllers/sitemap'
+
 export default app => {
   app.get('/',
     params({ currentPage: 1, tag: 'all' }, 'page-size', 'total-media'),
@@ -42,6 +46,11 @@ export default app => {
     params({}, 'total-media'),
     renderRandomizeMedia()
   )
+
+  app.get([
+    '/sitemap',
+    '/sitemap.xml'
+  ], generateSitemap())
 
   return app
 }

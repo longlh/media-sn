@@ -52,6 +52,7 @@
     "request": "2.81.0",
     "request-progress": "3.0.0",
     "shorthash": "0.0.2",
+    "sitemap": "1.13.0",
     "slug": "0.9.1"
   },
   "devDependencies": {
