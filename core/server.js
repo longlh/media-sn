@@ -35,7 +35,7 @@ if (!config.production) {
 }
 
 if (config.production) {
-  server.use((req, res, next) => res.redirect('/'))
+  server.use((error, req, res, next) => res.redirect('/'))
 }
 
 export default server
