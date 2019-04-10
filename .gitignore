@@ -64,3 +64,5 @@ content/**
 /config.prod.js
 /index.legacy.js
 /core.legacy
+
+data/mongo

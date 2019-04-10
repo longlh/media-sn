@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  mongo:
+    image: mongo:3.6
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+      - "27019:27017"
+
+  media-sn:
+    image: node:carbon
+    container_name: media.sn
+    working_dir: /usr/media-sn
+    command: bash -c "tail -f /dev/null"
+    volumes:
+      - .:/usr/media-sn
+      - /usr/media-sn/node_modules
+    ports:
+      - "3100:3100"
