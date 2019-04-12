@@ -1,5 +1,5 @@
 import express from 'express'
-import proxy from 'express-http-proxy'
+import httpProxy from 'http-proxy'
 import findPort from 'find-free-port'
 import morgan from 'morgan'
 
@@ -13,15 +13,26 @@ export default async () => {
   server.use(morgan('dev'))
 
   // load theme
-  const theme = await loadTheme(config.theme)
+  const publicPath = '/assets'
+  const theme = await loadTheme({
+    name: config.theme,
+    publicPath
+  })
 
   if (theme.devServer) {
     const { devServer } = theme
 
     const [ port ] = await findPort(config.port + 1)
+    const proxy = httpProxy.createProxyServer({})
 
     // forward /assets to devServer
-    server.use('/assets', proxy(`0.0.0.0:${port}`))
+    server.use(`${publicPath}`, [
+      (req, res, next) => {
+        proxy.web(req, res, {
+          target: `http://0.0.0.0:${port}${publicPath}`
+        })
+      }
+    ])
 
     server.on('started', () => {
       console.log(`Starting dev-server... at :${port}`)
