@@ -1,13 +1,14 @@
-import express from 'express'
-import morgan from 'morgan'
+import config from '@core/infrastructure/config'
+import createHttpServer from '@site/http-server'
 
-import config from '@/core/infrastructure/config'
+const main = async () => {
+  const server = await createHttpServer()
 
-const site = express()
-const port = 3100
+  server.listen(config.port, () => {
+    server.emit('started')
 
-site.use(morgan('dev'))
+    console.log(`Started at :${config.port}`)
+  })
+}
 
-site.listen(port, () => {
-  console.log(`Started at ${port}`)
-})
+main()

@@ -9,7 +9,9 @@
   "plugins": [
     [ "module-resolver", {
       "alias": {
-        "@": "./src"
+        "@core": "./src/core",
+        "@site": "./src/site",
+        "@worker": "./src/worker"
       }
     } ],
     "@babel/plugin-transform-runtime",
