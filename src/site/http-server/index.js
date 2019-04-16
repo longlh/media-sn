@@ -19,29 +19,43 @@ export default async () => {
     publicPath
   })
 
-  if (theme.devServer) {
-    const { devServer } = theme
+  const [ internalPort ] = theme.devServer ?
+    (await findPort(config.port + 1)) : null
 
-    const [ port ] = await findPort(config.port + 1)
+  if (internalPort) {
     const proxy = httpProxy.createProxyServer({})
 
     // forward /assets to devServer
     server.use(`${publicPath}`, [
       (req, res, next) => {
         proxy.web(req, res, {
-          target: `http://0.0.0.0:${port}${publicPath}`
+          target: `http://0.0.0.0:${internalPort}${publicPath}`
         })
       }
     ])
+  }
 
-    server.on('started', () => {
-      console.log(`Starting dev-server... at :${port}`)
+  server.on('start', () => {
+    if (!internalPort) {
+      return server.listen(config.port, () => {
+        console.log(`Started standalone server at :${config.port}`)
+      })
+    }
 
-      devServer.listen(port, () => {
-        devServer.emit('started')
+    const { devServer } = theme
+
+    devServer.on('compile:done', () => {
+      // start server
+      server.listen(config.port, () => {
+        console.log(`Started server at :${config.port}`)
       })
     })
-  }
+
+    // start dev-server
+    devServer.listen(internalPort, () => {
+      console.log(`Started dev-server at :${internalPort}`)
+    })
+  })
 
   return server
 }

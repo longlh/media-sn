@@ -28,24 +28,21 @@ const createWebpackConfig = ({
     plugins: [
       new WebpackAssetsManifest({
         output: manifestPath,
-        publicPath: `${publicPath}/`,
-        writeToDisk: true
+        publicPath: `${publicPath}/`
       })
     ]
   }
 }
 
 export default async (info) => {
-
-
   const webpackConfig = createWebpackConfig(info)
 
   const compiler = webpack(webpackConfig)
 
   const devServer = express()
 
-  devServer.get(`${webpackConfig.output.publicPath}/manifest.json`, (req, res, next) => {
-    res.sendFile(info.manifestPath)
+  compiler.hooks.emit.tap('done', () => {
+    devServer.emit('compile:done')
   })
 
   devServer.use([
@@ -54,7 +51,8 @@ export default async (info) => {
       watchOption: {
         ignore: /node_modules/
       },
-      writeToDisk: true
+      writeToDisk: false,
+      stats: 'minimal'
     })
   ])
 
