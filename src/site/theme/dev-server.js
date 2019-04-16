@@ -4,44 +4,51 @@ import fs from 'fs-extra'
 import glob from 'glob'
 import path from 'path'
 import webpack from 'webpack'
+import WebpackAssetsManifest from 'webpack-assets-manifest'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 
-const createWebpackConfig = ({ name, publicPath }) => {
-  console.log(`Loading theme [${name}]... at: ${publicPath}`)
-
-  const cwd = process.cwd()
-  const themeDir = path.join(cwd, 'content/themes', name)
-  const outDir = path.join(cwd, 'data/dist')
-
-  console.log(themeDir, outDir)
-
+const createWebpackConfig = ({
+  manifestPath,
+  publicPath,
+  themeDir,
+  outDir
+}) => {
   return {
     mode: 'development',
     output: {
       path: outDir,
       publicPath,
-      filename: 'js/[name].js'
+      filename: 'js/[name].[hash:6].js'
     },
     entry: {
       list: [
         path.join(themeDir, 'pages/list/script/index.js')
       ]
-    }
+    },
+    plugins: [
+      new WebpackAssetsManifest({
+        output: manifestPath,
+        publicPath: `${publicPath}/`,
+        writeToDisk: true
+      })
+    ]
   }
 }
 
-export default async (theme) => {
-  const webpackConfig = createWebpackConfig(theme)
+export default async (info) => {
+
+
+  const webpackConfig = createWebpackConfig(info)
+
   const compiler = webpack(webpackConfig)
 
   const devServer = express()
 
-  devServer.use([
-    (req, res, next) => {
-      console.log(`[dev-server] Handle ${req.url}...`)
+  devServer.get(`${webpackConfig.output.publicPath}/manifest.json`, (req, res, next) => {
+    res.sendFile(info.manifestPath)
+  })
 
-      next()
-    },
+  devServer.use([
     webpackDevMiddleware(compiler, {
       publicPath: webpackConfig.output.publicPath,
       watchOption: {
