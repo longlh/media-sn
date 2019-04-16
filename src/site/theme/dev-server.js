@@ -8,6 +8,7 @@ import WebpackAssetsManifest from 'webpack-assets-manifest'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 
 const createWebpackConfig = ({
+  assets,
   manifestPath,
   publicPath,
   themeDir,
@@ -28,21 +29,28 @@ const createWebpackConfig = ({
     plugins: [
       new WebpackAssetsManifest({
         output: manifestPath,
-        publicPath: `${publicPath}/`
+        publicPath: true,
+        assets
       })
     ]
   }
 }
 
 export default async (info) => {
-  const webpackConfig = createWebpackConfig(info)
+  const assets = {}
+  const webpackConfig = createWebpackConfig({
+    ...info,
+    assets
+  })
 
   const compiler = webpack(webpackConfig)
 
   const devServer = express()
 
   compiler.hooks.emit.tap('done', () => {
-    devServer.emit('compile:done')
+    devServer.emit('compile:done', {
+      assets
+    })
   })
 
   devServer.use([

@@ -6,6 +6,9 @@ import morgan from 'morgan'
 import config from '@core/infrastructure/config'
 import loadTheme from '@site/theme'
 
+import loadRoute from './route'
+import loadViewEngine from './view-engine'
+
 export default async () => {
   const server = express()
 
@@ -13,7 +16,7 @@ export default async () => {
   server.use(morgan('dev'))
 
   // load theme
-  const publicPath = '/assets'
+  const publicPath = '/assets/'
   const theme = await loadTheme({
     name: config.theme,
     publicPath
@@ -26,7 +29,7 @@ export default async () => {
     const proxy = httpProxy.createProxyServer({})
 
     // forward /assets to devServer
-    server.use(`${publicPath}`, [
+    server.use(publicPath, [
       (req, res, next) => {
         proxy.web(req, res, {
           target: `http://0.0.0.0:${internalPort}${publicPath}`
@@ -34,6 +37,12 @@ export default async () => {
       }
     ])
   }
+
+  // bootstrap
+  await loadRoute(server)
+  await loadViewEngine(server, {
+    viewDir: theme.themeDir
+  })
 
   server.on('start', () => {
     if (!internalPort) {
@@ -44,8 +53,9 @@ export default async () => {
 
     const { devServer } = theme
 
-    devServer.on('compile:done', () => {
+    devServer.on('compile:done', ({ assets }) => {
       // start server
+      server.set('assets', assets)
       server.listen(config.port, () => {
         console.log(`Started server at :${config.port}`)
       })
