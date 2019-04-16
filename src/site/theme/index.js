@@ -1,8 +1,12 @@
 import path from 'path'
 
-// import config from '@theme/config'
-
 import createDevServer from './dev-server'
+
+const dynamicImport = (path) => {
+  const module = require(path)
+
+  return module.default || module
+}
 
 export default async ({ name, publicPath }) => {
   console.log(`Loading theme [${name}]... at: ${publicPath}`)
@@ -19,15 +23,14 @@ export default async ({ name, publicPath }) => {
     publicPath
   })
 
-  const config = require(path.join(themeDir, 'config'))
-
-  console.log(config)
+  const override = dynamicImport(path.join(themeDir, 'override'))
 
   return {
     devServer,
     manifestPath,
     themeDir,
     outDir,
-    publicPath
+    publicPath,
+    override
   }
 }

@@ -39,7 +39,9 @@ export default async () => {
   }
 
   // bootstrap
-  await loadRoute(server)
+  await loadRoute(server, {
+    override: theme.override
+  })
   await loadViewEngine(server, {
     viewDir: theme.themeDir
   })
