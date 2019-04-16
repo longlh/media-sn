@@ -7,8 +7,7 @@
   "author": "LongLH <i.me.mine@luchoanglong.com>",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently --raw \"npm run start:server\"",
-    "start:server": "run.env nodemon ./src/site --exec babel-node --watch ./src/site --watch ./src/core"
+    "start": "run.env nodemon ./src/site --exec babel-node --watch ./src/site --watch ./src/core --watch ./content/themes/default/config.js --watch ./content/themes/default/extends"
   },
   "dependencies": {
     "connect-slashes": "1.4.0",

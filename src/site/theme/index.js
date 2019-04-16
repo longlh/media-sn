@@ -1,6 +1,6 @@
 import path from 'path'
 
-import config from '@theme/config'
+// import config from '@theme/config'
 
 import createDevServer from './dev-server'
 
@@ -8,7 +8,7 @@ export default async ({ name, publicPath }) => {
   console.log(`Loading theme [${name}]... at: ${publicPath}`)
 
   const cwd = process.cwd()
-  const themeDir = path.join(cwd, 'src/themes', name)
+  const themeDir = path.join(cwd, 'content/themes', name)
   const outDir = path.join(cwd, 'data/dist')
   const manifestPath = path.join(outDir, 'manifest.json')
 
@@ -18,6 +18,10 @@ export default async ({ name, publicPath }) => {
     manifestPath,
     publicPath
   })
+
+  const config = require(path.join(themeDir, 'config'))
+
+  console.log(config)
 
   return {
     devServer,
