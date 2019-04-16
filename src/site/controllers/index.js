@@ -5,7 +5,7 @@ export default [
     name: 'home',
     path: '/',
     methods: {
-      GET: [
+      get: [
         async (req, res, next) => {
           console.log('[home] middleware 1')
 
@@ -24,7 +24,7 @@ export default [
     name: 'list',
     path: '/posts',
     methods: {
-      GET: [
+      get: [
         async (req, res, next) => {
           console.log('[list] middleware 1')
 
@@ -38,7 +38,7 @@ export default [
     name: 'post',
     path: '/posts/:id',
     methods: {
-      GET: [
+      get: [
         render('pages/post/view.ect')
       ]
     }

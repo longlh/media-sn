@@ -3,12 +3,11 @@ import controllers from '@site/controllers'
 const register = (server, controller) => {
   Object.entries(controller.methods).forEach(
     ([ method, middlewares ]) => {
-      switch (method) {
-        case 'GET':
-          server.get(controller.path, middlewares)
-
-          break
+      if (typeof server[method] !== 'function') {
+        throw 'Invalid configuration'
       }
+
+      server[method](controller.path, middlewares)
     }
   )
 }
