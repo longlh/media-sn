@@ -5,5 +5,9 @@ export default {
   // from ENV_VARIABLES
   devMode: process.env.NODE_ENV !== 'production',
   theme: 'default',
-  port: Number(process.env.PORT)
+  port: Number(process.env.PORT),
+  facebook: {
+    clientId: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+  }
 }

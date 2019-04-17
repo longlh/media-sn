@@ -8,8 +8,14 @@ const regexp = {}
 export default async (server, theme) => {
   // TODO override by theme
 
-  controllers.forEach(
-    ({ name, path, methods }) => {
+  controllers.filter(Boolean).forEach(
+    (controller) => {
+      const { name, path, methods } = controller
+
+      if (!name || !path || !methods) {
+        return
+      }
+
       console.log(`${name} -> ${path}`)
 
       if (regexp[name]) {

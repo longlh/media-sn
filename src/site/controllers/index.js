@@ -1,6 +1,9 @@
+import auth from './auth'
+
 const render = (template) => (req, res) => res.render(template)
 
-export default [ {
+export default [
+  ...auth, {
   name: 'home',
   path: '/',
   methods: {

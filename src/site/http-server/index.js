@@ -4,6 +4,7 @@ import findPort from 'find-free-port'
 import morgan from 'morgan'
 
 import config from '@core/infrastructure/config'
+import passport from '@core/infrastructure/passport'
 import loadTheme from '@site/theme'
 
 import loadRoute from './route'
@@ -14,6 +15,8 @@ export default async () => {
 
   // initialize
   server.use(morgan('dev'))
+  server.use(passport.initialize())
+  server.use(passport.session())
 
   // load theme
   const publicPath = '/assets/'
