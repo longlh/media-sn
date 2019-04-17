@@ -22,6 +22,10 @@ const createWebpackConfig = ({
       filename: 'js/[name].[hash:6].js'
     },
     entry: {
+      home: [
+        path.join(themeDir, 'pages/home/script/index.js'),
+        path.join(themeDir, 'pages/home/style/index.scss')
+      ],
       list: [
         path.join(themeDir, 'pages/list/script/index.js')
       ]
@@ -32,7 +36,34 @@ const createWebpackConfig = ({
         publicPath: true,
         assets
       })
-    ]
+    ],
+    module: {
+      rules: [ {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env'
+            ],
+            plugins: [
+              '@babel/plugin-proposal-object-rest-spread',
+              '@babel/plugin-transform-runtime'
+            ]
+          }
+        }
+      }, {
+        test: /\.scss$/,
+        use: [ {
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }, {
+          loader: 'sass-loader'
+        } ]
+      } ]
+    }
   }
 }
 

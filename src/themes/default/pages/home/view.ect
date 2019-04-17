@@ -1,2 +1,10 @@
-<h1>Homepage</h1>
-<a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+<!doctype html>
+<html>
+  <body>
+    <h1>Homepage</h1>
+    <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+
+    <script src="<%= @_.asset('home.js') %>"></script>
+  </body>
+</html>
+
