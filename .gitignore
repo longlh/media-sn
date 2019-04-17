@@ -58,3 +58,4 @@ typings/
 .env
 data/dist
 data/mongo
+data/build

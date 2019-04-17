@@ -23,7 +23,7 @@ export default async () => {
   })
 
   const [ internalPort ] = theme.devServer ?
-    (await findPort(config.port + 1)) : null
+    (await findPort(config.port + 1)) : [ null ]
 
   if (internalPort) {
     const proxy = httpProxy.createProxyServer({})

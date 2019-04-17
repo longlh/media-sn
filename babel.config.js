@@ -10,6 +10,7 @@ module.exports = {
     [ 'module-resolver', {
       alias: {
         '@core': './src/core',
+        "@theme": "./src/themes/default",
         '@site': './src/site',
         '@worker': './src/worker'
       }
