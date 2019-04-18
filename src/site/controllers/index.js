@@ -12,7 +12,6 @@ export default [
         console.log('[home] middleware 1')
 
         if (req.user) {
-          console.log('authenticated with', req.user)
           res.locals.authenticated = true
         }
 
