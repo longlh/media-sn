@@ -14,13 +14,5 @@ export default async (server, { viewDir }) => {
   server.set('views', viewDir)
   server.engine('ect', engine.render)
 
-  // set view helper
-  server.locals._ = server.locals._ || {}
-  server.locals._.asset = (p) => {
-    const assets = server.get('assets')
-
-    return assets && assets[p] || p
-  }
-
   return server
 }

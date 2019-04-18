@@ -41,6 +41,14 @@ export default async () => {
     ])
   }
 
+  // set view helper
+  server.locals._ = server.locals._ || {}
+  server.locals._.asset = (p) => {
+    const assets = server.get('assets')
+
+    return assets && assets[p] || p
+  }
+
   // bootstrap
   await loadRoute(server, {
     override: theme.override
@@ -51,6 +59,8 @@ export default async () => {
 
   server.on('start', () => {
     if (!internalPort) {
+      // TODO get assets from file
+
       return server.listen(config.port, () => {
         console.log(`Started standalone server at :${config.port}`)
       })
@@ -61,6 +71,7 @@ export default async () => {
     devServer.on('compile:done', ({ assets }) => {
       // start server
       server.set('assets', assets)
+
       server.listen(config.port, () => {
         console.log(`Started server at :${config.port}`)
       })

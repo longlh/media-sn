@@ -38,13 +38,13 @@ export default async (server, theme) => {
 
   // add view helper
   server.locals._ = server.locals._ || {}
-  server.locals._.url = (name, pathParams, queryParams) => {
+  server.locals._.url = (name, params, query) => {
     const toPath = regexp[name]
 
     if (!toPath) {
       throw `${name} is not registered`
     }
 
-    return toPath(pathParams) + queryParams ? '?' + querystring.stringify(queryParams) : ''
+    return toPath(params) + (query ? '?' + querystring.stringify(query) : '')
   }
 }
