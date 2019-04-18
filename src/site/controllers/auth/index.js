@@ -1,6 +1,18 @@
 import passport from '@core/infrastructure/passport'
 
 export default [ {
+  name: 'auth.logout',
+  path: '/auth/logout',
+  methods: {
+    get: [
+      (req, res) => {
+        req.logout()
+
+        res.redirect('/')
+      }
+    ]
+  }
+}, {
   name: 'auth.facebook',
   path: '/auth/facebook',
   methods: {

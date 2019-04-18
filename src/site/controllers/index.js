@@ -11,6 +11,11 @@ export default [
       async (req, res, next) => {
         console.log('[home] middleware 1')
 
+        if (req.user) {
+          console.log('authenticated with', req.user)
+          res.locals.authenticated = true
+        }
+
         next()
       },
       async (req, res, next) => {

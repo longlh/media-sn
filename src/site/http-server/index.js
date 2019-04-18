@@ -1,4 +1,5 @@
 import express from 'express'
+import session from 'express-session'
 import httpProxy from 'http-proxy'
 import findPort from 'find-free-port'
 import morgan from 'morgan'
@@ -15,6 +16,11 @@ export default async () => {
 
   // initialize
   server.use(morgan('dev'))
+  server.use(session({
+    resave: false,
+    secret: 'xxx',
+    saveUninitialized: true
+  }))
   server.use(passport.initialize())
   server.use(passport.session())
 

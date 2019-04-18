@@ -2,7 +2,13 @@
 <html>
   <body>
     <h1>Homepage</h1>
-    <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+    <% if @authenticated :%>
+      <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+      <br>
+      <a href="<%= @_.url('auth.logout') %>">Logout</a>
+    <% else :%>
+      <a href="<%= @_.url('auth.facebook') %>">Login by FB</a>
+    <% end %>
 
     <script src="<%= @_.asset('home.js') %>"></script>
   </body>
