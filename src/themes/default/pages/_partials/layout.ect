@@ -4,7 +4,16 @@
     <% content 'head-end' %>
   </head>
   <body>
-    <% content %>
-    <% content 'body-end' %>
+    <nav class="header">
+      <% if @authenticated :%>
+        <a href="<%= @_.url('auth.logout') %>">Logout</a>
+      <% else :%>
+        <a href="<%= @_.url('auth.login') %>">Login</a>
+      <% end %>
+    </nav>
+    <section>
+      <% content %>
+      <% content 'body-end' %>
+    </section>
   </body>
 </html>

@@ -1,0 +1,12 @@
+{
+  "verbose": true,
+  "watch": [
+    "./src/site"
+  ],
+  "ignore": [
+    "./node_modules",
+    "./content/themes/default/pages"
+  ],
+  "ext": "js,json",
+  "exec": "babel-node"
+}

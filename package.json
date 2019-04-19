@@ -7,7 +7,7 @@
   "author": "LongLH <i.me.mine@luchoanglong.com>",
   "license": "MIT",
   "scripts": {
-    "start": "run.env nodemon ./src/site --exec babel-node --watch ./src/site --watch ./src/core --watch ./content/themes/default/override",
+    "start": "run.env nodemon ./src/site --config ./nodemon/site.json",
     "clear": "rm -rf ./data/build",
     "build": "npm run build:babel && npm run build:copy-ect",
     "build:babel": "babel ./src -d ./data/build --ignore=**/node_modules,src/themes/default/pages",

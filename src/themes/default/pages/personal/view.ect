@@ -1,0 +1,10 @@
+<% extend 'pages/_partials/layout' %>
+
+<% block 'body-end' :%>
+  <script src="<%= @_.asset('personal.js') %>" defer></script>
+<% end %>
+
+<main>
+  <h1>Personal</h1>
+  <button id="upload">Upload images</button>
+</main>

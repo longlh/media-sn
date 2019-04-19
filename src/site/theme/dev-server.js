@@ -28,6 +28,9 @@ const createWebpackConfig = ({
       ],
       list: [
         path.join(themeDir, 'pages/list/script/index.js')
+      ],
+      personal: [
+        path.join(themeDir, 'pages/personal/script/index.js')
       ]
     },
     plugins: [

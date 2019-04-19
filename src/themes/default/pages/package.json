@@ -2,7 +2,7 @@
   "author": "LongLH <i.me.mine@luchoanglong.com>",
   "license": "MIT",
   "dependencies": {
-    "fine-uploader": "5.16.2",
-    "jquery": "3.4.0"
+    "jquery": "3.4.0",
+    "plupload": "^2.3.6"
   }
 }

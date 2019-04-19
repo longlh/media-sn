@@ -1,17 +1,10 @@
-import render from '@core/middlewares/render'
+import { render } from '@core/middlewares'
 
 export default [ {
   name: 'home',
   path: '/',
   methods: {
     get: [
-      (req, res, next) => {
-        if (req.user) {
-          res.locals.authenticated = true
-        }
-
-        next()
-      },
       render('pages/home')
     ]
   }

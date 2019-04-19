@@ -1,21 +1,17 @@
-import render from '@core/middlewares/render'
+import { render } from '@core/middlewares'
 
 import auth from './auth'
 import home from './home'
-
+import personal from './personal'
 
 export default [
   ...auth,
-  ...home, {
+  ...home,
+  ...personal, {
   name: 'list',
   path: '/posts',
   methods: {
     get: [
-      async (req, res, next) => {
-        console.log('[list] middleware 1')
-
-        next()
-      },
       render('pages/list')
     ]
   }

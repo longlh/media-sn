@@ -81,13 +81,15 @@ export default async () => {
 
     const { devServer } = theme
 
-    devServer.on('compile:done', ({ assets }) => {
-      // start server
-      server.set('assets', assets)
-
+    devServer.once('compile:done', () => {
       server.listen(config.port, () => {
         console.log(`Started server at :${config.port}`)
       })
+    })
+
+    devServer.on('compile:done', ({ assets }) => {
+      // start server
+      server.set('assets', assets)
     })
 
     // start dev-server

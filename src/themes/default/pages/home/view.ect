@@ -7,7 +7,7 @@
 <main>
   <h1>Homepage</h1>
   <% if @authenticated :%>
-    <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+    <a href="<%= @_.url('personal') %>">Personal</a>
     <br>
     <a href="<%= @_.url('auth.logout') %>">Logout</a>
   <% else :%>

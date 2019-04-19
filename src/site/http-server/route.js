@@ -1,11 +1,15 @@
 import pathToRegexp from 'path-to-regexp'
 import querystring from 'querystring'
 
+import { checkAuthenticate } from '@core/middlewares'
 import controllers from '@site/controllers'
 
 const regexp = {}
 
 export default async (server, theme) => {
+  // base middlewares
+  server.use(checkAuthenticate)
+
   // TODO override by theme
 
   controllers.filter(Boolean).forEach(
