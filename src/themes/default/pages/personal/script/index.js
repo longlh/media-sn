@@ -5,3 +5,4 @@ const uploader = new Uploader({
   url: '/api/v1/upload'
 })
 
+uploader.init()

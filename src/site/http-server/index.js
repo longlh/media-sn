@@ -5,6 +5,7 @@ import findPort from 'find-free-port'
 import morgan from 'morgan'
 import createRedisStore from 'connect-redis'
 
+import createApiServer from '@core/api'
 import config from '@core/infrastructure/config'
 import passport from '@core/infrastructure/passport'
 import redis from '@core/infrastructure/redis'
@@ -15,6 +16,7 @@ import loadViewEngine from './view-engine'
 
 export default async () => {
   const server = express()
+  const apiServer = await createApiServer()
 
   // initialize
   const RedisStore = createRedisStore(session)
@@ -30,6 +32,8 @@ export default async () => {
   }))
   server.use(passport.initialize())
   server.use(passport.session())
+
+  server.use('/api/v1', apiServer)
 
   // load theme
   const publicPath = '/assets/'
