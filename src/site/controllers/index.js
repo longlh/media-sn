@@ -16,7 +16,7 @@ export default [
 
         next()
       },
-      render('pages/list/view.ect')
+      render('pages/list')
     ]
   }
 }, {
@@ -24,7 +24,7 @@ export default [
   path: '/posts/:id',
   methods: {
     get: [
-      render('pages/post/view.ect')
+      render('pages/post')
     ]
   }
 } ]

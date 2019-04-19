@@ -1,6 +1,15 @@
 import passport from '@core/infrastructure/passport'
+import render from '@core/middlewares/render'
 
 export default [ {
+  name: 'auth.login',
+  path: '/auth/login',
+  methods: {
+    get: [
+      render('pages/login')
+    ]
+  }
+}, {
   name: 'auth.logout',
   path: '/auth/logout',
   methods: {

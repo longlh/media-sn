@@ -12,7 +12,7 @@ export default [ {
 
         next()
       },
-      render('pages/home/view.ect')
+      render('pages/home')
     ]
   }
 } ]

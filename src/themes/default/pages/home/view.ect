@@ -1,16 +1,18 @@
-<!doctype html>
-<html>
-  <body>
-    <h1>Homepage</h1>
-    <% if @authenticated :%>
-      <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
-      <br>
-      <a href="<%= @_.url('auth.logout') %>">Logout</a>
-    <% else :%>
-      <a href="<%= @_.url('auth.facebook') %>">Login by FB</a>
-    <% end %>
+<% extend 'pages/_partials/layout' %>
 
-    <script src="<%= @_.asset('home.js') %>"></script>
-  </body>
-</html>
+<% block 'body-end' :%>
+  <script src="<%= @_.asset('home.js') %>"></script>
+<% end %>
+
+<main>
+  <h1>Homepage</h1>
+  <% if @authenticated :%>
+    <a href="<%= @_.url('post', { id: 100 }, { sort: 'xxx' }) %>">Post detail</a>
+    <br>
+    <a href="<%= @_.url('auth.logout') %>">Logout</a>
+  <% else :%>
+    <a href="<%= @_.url('auth.login') %>">Login</a>
+  <% end %>
+</main>
+
 
