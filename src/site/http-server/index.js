@@ -3,9 +3,11 @@ import session from 'express-session'
 import httpProxy from 'http-proxy'
 import findPort from 'find-free-port'
 import morgan from 'morgan'
+import createRedisStore from 'connect-redis'
 
 import config from '@core/infrastructure/config'
 import passport from '@core/infrastructure/passport'
+import redis from '@core/infrastructure/redis'
 import loadTheme from '@site/theme'
 
 import loadRoute from './route'
@@ -15,11 +17,16 @@ export default async () => {
   const server = express()
 
   // initialize
+  const RedisStore = createRedisStore(session)
+
   server.use(morgan('dev'))
   server.use(session({
     resave: false,
     secret: 'xxx',
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new RedisStore({
+      client: redis
+    })
   }))
   server.use(passport.initialize())
   server.use(passport.session())

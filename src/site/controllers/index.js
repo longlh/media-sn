@@ -1,31 +1,12 @@
-import auth from './auth'
+import render from '@core/middlewares/render'
 
-const render = (template) => (req, res) => res.render(template)
+import auth from './auth'
+import home from './home'
+
 
 export default [
-  ...auth, {
-  name: 'home',
-  path: '/',
-  methods: {
-    get: [
-      async (req, res, next) => {
-        console.log('[home] middleware 1')
-
-        if (req.user) {
-          res.locals.authenticated = true
-        }
-
-        next()
-      },
-      async (req, res, next) => {
-        console.log('[home] middleware 2')
-
-        next()
-      },
-      render('pages/home/view.ect')
-    ]
-  }
-}, {
+  ...auth,
+  ...home, {
   name: 'list',
   path: '/posts',
   methods: {

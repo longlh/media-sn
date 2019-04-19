@@ -7,6 +7,11 @@ services:
     ports:
       - "27019:27017"
 
+  redis:
+    image: redis:5.0.4-alpine
+    ports:
+      - "6379:6379"
+
   media-sn:
     image: node:carbon
     container_name: media.sn
@@ -15,5 +20,6 @@ services:
     volumes:
       - .:/usr/media-sn
       - /usr/media-sn/node_modules
+      - /usr/media-sn/src/themes/default/pages/node_modules
     ports:
       - "3100:3100"
