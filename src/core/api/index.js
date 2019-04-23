@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import path from 'path'
 
 import config from '@core/infrastructure/config'
+import mediaService from '@core/services/media'
 
 export default async () => {
   const app = express()
@@ -11,14 +12,14 @@ export default async () => {
   app.post('/upload', (req, res, next) => {
     const form = new formidable.IncomingForm()
 
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       if (err) {
         return next(err)
       }
 
-      const storeDir = path.resolve(config.cwd, '../content/upload')
+      const storeDir = path.resolve(config.cwd, config.uploadDir)
 
-      fs.ensureDirSync(storeDir)
+      await fs.ensureDir(storeDir)
 
       const basename = fields.name.toLowerCase()
       const tmpPath = files.file.path
@@ -30,14 +31,20 @@ export default async () => {
       const rs = fs.createReadStream(tmpPath)
       const ws = fs.createWriteStream(storePath, { flags: 'a' })
 
-      rs.on('end', () => {
-        fs.removeSync(tmpPath)
+      rs.on('end', async () => {
+        await fs.remove(tmpPath)
 
         if (chunk < chunks - 1) {
-          return res.sendStatus(200)
+          // accepted
+          return res.sendStatus(202)
         }
 
-        res.sendStatus(201)
+        const media = await mediaService.create({
+          path: storePath,
+          createdBy: req.user._id
+        })
+
+        res.status(201).json(media)
       })
 
       rs.pipe(ws)

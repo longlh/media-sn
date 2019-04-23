@@ -1,3 +1,6 @@
+import namor from 'namor'
+import titleCase from 'title-case'
+
 import mongoose from '@core/infrastructure/mongoose'
 
 const account = mongoose.Schema({
@@ -18,7 +21,18 @@ const account = mongoose.Schema({
 })
 
 const user = mongoose.Schema({
-  accounts: [ account ]
+  accounts: [ account ],
+  displayName: {
+    type: String,
+    required: true,
+    default: () => titleCase(
+      namor.generate({
+        manly: true,
+        words: 2,
+        numbers: 0
+      }).replace(/-/g, ' ')
+    )
+  }
 }, {
   timestamps: true
 })

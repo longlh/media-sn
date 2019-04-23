@@ -30,10 +30,12 @@
     "mongoose": "5.5.0",
     "morgan": "1.9.1",
     "ms": "2.1.1",
+    "namor": "1.1.2",
     "passport": "0.4.0",
     "passport-facebook": "3.0.0",
     "path-to-regexp": "3.0.0",
-    "pretty": "2.0.0"
+    "pretty": "2.0.0",
+    "title-case": "2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.4.3",
