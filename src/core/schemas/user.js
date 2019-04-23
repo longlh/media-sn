@@ -29,8 +29,9 @@ const user = mongoose.Schema({
       namor.generate({
         manly: true,
         words: 2,
-        numbers: 0
-      }).replace(/-/g, ' ')
+        numbers: 0,
+        char: ' '
+      })
     )
   }
 }, {
