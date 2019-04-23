@@ -5,8 +5,6 @@ import path from 'path'
 
 import config from '@core/infrastructure/config'
 
-const buffers = {}
-
 export default async () => {
   const app = express()
 
@@ -26,15 +24,11 @@ export default async () => {
       const tmpPath = files.file.path
       const storePath = path.join(storeDir, fields.name)
 
-      const name = fields.name
       const chunk = parseInt(fields.chunk, 10)
       const chunks = parseInt(fields.chunks, 10)
 
       const rs = fs.createReadStream(tmpPath)
-
-      rs.on('data', (chunk) => {
-        fs.writeFile(storePath, chunk, { flag: 'a' })
-      })
+      const ws = fs.createWriteStream(storePath, { flags: 'a' })
 
       rs.on('end', () => {
         fs.removeSync(tmpPath)
@@ -45,6 +39,8 @@ export default async () => {
 
         res.sendStatus(201)
       })
+
+      rs.pipe(ws)
     })
   },
   (err, req, res, next) => {
