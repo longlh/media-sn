@@ -11,7 +11,7 @@ const createWebpackConfig = ({
   assets,
   manifestPath,
   publicPath,
-  themeDir,
+  appDir,
   outDir
 }) => {
   return {
@@ -23,14 +23,14 @@ const createWebpackConfig = ({
     },
     entry: {
       home: [
-        path.join(themeDir, 'pages/home/script/index.js'),
-        path.join(themeDir, 'pages/home/style/index.scss')
+        path.join(appDir, 'pages/home/script/index.js'),
+        path.join(appDir, 'pages/home/style/index.scss')
       ],
       list: [
-        path.join(themeDir, 'pages/list/script/index.js')
+        path.join(appDir, 'pages/list/script/index.js')
       ],
       personal: [
-        path.join(themeDir, 'pages/personal/script/index.js')
+        path.join(appDir, 'pages/personal/script/index.js')
       ]
     },
     plugins: [

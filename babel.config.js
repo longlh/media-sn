@@ -9,8 +9,8 @@ module.exports = {
   plugins: [
     [ 'module-resolver', {
       alias: {
+        "@app": "./src/app",
         '@core': './src/core',
-        "@theme": "./src/themes/default",
         '@site': './src/site',
         '@worker': './src/worker'
       }

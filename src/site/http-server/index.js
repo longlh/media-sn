@@ -9,7 +9,7 @@ import createApiServer from '@core/api'
 import config from '@core/infrastructure/config'
 import passport from '@core/infrastructure/passport'
 import redis from '@core/infrastructure/redis'
-import loadTheme from '@site/theme'
+import loadApp from '@site/app'
 
 import loadRoute from './route'
 import loadViewEngine from './view-engine'
@@ -37,12 +37,9 @@ export default async () => {
 
   // load theme
   const publicPath = '/assets/'
-  const theme = await loadTheme({
-    name: config.theme,
-    publicPath
-  })
+  const app = await loadApp(publicPath)
 
-  const [ internalPort ] = theme.devServer ?
+  const [ internalPort ] = app.devServer ?
     (await findPort(config.port + 1)) : [ null ]
 
   if (internalPort) {
@@ -68,10 +65,10 @@ export default async () => {
 
   // bootstrap
   await loadRoute(server, {
-    override: theme.override
+    override: app.override
   })
   await loadViewEngine(server, {
-    viewDir: theme.themeDir
+    viewDir: app.appDir
   })
 
   server.on('start', () => {
@@ -83,7 +80,7 @@ export default async () => {
       })
     }
 
-    const { devServer } = theme
+    const { devServer } = app
 
     devServer.once('compile:done', () => {
       server.listen(config.port, () => {
